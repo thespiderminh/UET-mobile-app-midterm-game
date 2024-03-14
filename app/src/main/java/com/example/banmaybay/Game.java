@@ -38,11 +38,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
         setFocusable(true);
 
-        // Create an Aircraft
-        aircraft = new Aircraft(context, (double) SCREEN_WIDTH / 2, (double) (SCREEN_HEIGHT * 8) / 10, 50);
-
         // Create joystick
         joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
+
+        // Create an Aircraft
+        aircraft = new Aircraft(context, joystick, (double) SCREEN_WIDTH / 2, (double) (SCREEN_HEIGHT * 8) / 10, 50);
         gameMode = "touch";
 //        gameMode = "joystick";
     }
@@ -132,7 +132,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         // update all state
         joystick.update();
-
-        aircraft.update(joystick);
+        aircraft.update();
     }
 }
