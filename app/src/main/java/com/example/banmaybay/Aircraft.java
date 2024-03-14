@@ -1,5 +1,8 @@
 package com.example.banmaybay;
 
+import static com.example.banmaybay.MainActivity.SCREEN_HEIGHT;
+import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -35,12 +38,12 @@ public class Aircraft {
         canvas.drawCircle((float) positionX, (float) positionY, (float) radius, paint);
     }
 
-    public void update(Joystick joystick, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    public void update(Joystick joystick) {
         velocityX = joystick.getActuatorX() * MAX_SPEED;
         velocityY = joystick.getActuatorY() * MAX_SPEED;
-        setPositionOnJoystick(this.positionX + velocityX, this.positionY + velocityY, SCREEN_WIDTH, SCREEN_HEIGHT);
+        setPositionOnJoystick(this.positionX + velocityX, this.positionY + velocityY);
     }
-    public void setPositionOnTouch(double positionX, double positionY, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    public void setPositionOnTouch(double positionX, double positionY) {
         double newPositionX = oldPositionX - anchorPositionX + positionX;
         double newPositionY = oldPositionY - anchorPositionY + positionY;
         if(newPositionX >= 0 && newPositionX <= SCREEN_WIDTH) {
@@ -51,7 +54,7 @@ public class Aircraft {
         }
     }
 
-    public void setPositionOnJoystick(double positionX, double positionY, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    public void setPositionOnJoystick(double positionX, double positionY) {
         if(positionX >= 0 && positionX <= SCREEN_WIDTH) {
             this.positionX = positionX;
         }

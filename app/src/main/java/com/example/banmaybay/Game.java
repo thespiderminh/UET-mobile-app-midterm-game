@@ -1,5 +1,8 @@
 package com.example.banmaybay;
 
+import static com.example.banmaybay.MainActivity.SCREEN_HEIGHT;
+import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -18,18 +21,14 @@ import java.util.Objects;
  * and render all objects to the screen
  */
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
-    public final int SCREEN_WIDTH;
-    public final int SCREEN_HEIGHT;
     private GameLoop gameLoop;
     private Aircraft aircraft;
     private Context context;
     private Joystick joystick;
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
-    public Game(Context context, int width, int height) {
+    public Game(Context context) {
         super(context);
         this.context = getContext();
-        this.SCREEN_WIDTH = width;
-        this.SCREEN_HEIGHT = height;
 
         // Get surface holder and add callback
         SurfaceHolder surfaceHolder = getHolder();
@@ -40,10 +39,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
 
         // Create an Aircraft
-        aircraft = new Aircraft(context, (double) width / 2, (double) (height * 8) / 10, 50);
+        aircraft = new Aircraft(context, (double) SCREEN_WIDTH / 2, (double) (SCREEN_HEIGHT * 8) / 10, 50);
 
         // Create joystick
-        joystick = new Joystick(width / 2, height * 9 / 10, 150, 75);
+        joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
         gameMode = "touch";
 //        gameMode = "joystick";
     }
@@ -58,7 +57,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     aircraft.setAnchorPosition((double) event.getX(), (double) event.getY());
                     return true;
                 case MotionEvent.ACTION_MOVE:
-                    aircraft.setPositionOnTouch((double) event.getX(), (double) event.getY(), SCREEN_WIDTH, SCREEN_HEIGHT);
+                    aircraft.setPositionOnTouch((double) event.getX(), (double) event.getY());
                     return true;
                 default:
                     break;
@@ -134,6 +133,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // update all state
         joystick.update();
 
-        aircraft.update(joystick, SCREEN_WIDTH, SCREEN_HEIGHT);
+        aircraft.update(joystick);
     }
 }
