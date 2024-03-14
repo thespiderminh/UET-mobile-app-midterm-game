@@ -43,8 +43,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Create an Aircraft
         aircraft = new Aircraft(context, joystick, (double) SCREEN_WIDTH / 2, (double) (SCREEN_HEIGHT * 8) / 10, 50);
-        gameMode = "touch";
-//        gameMode = "joystick";
+//        gameMode = "touch";
+        gameMode = "joystick";
     }
 
     // For handling all touch action
