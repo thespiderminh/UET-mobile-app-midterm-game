@@ -1,4 +1,4 @@
-package com.example.banmaybay;
+package com.example.banmaybay.gamepanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

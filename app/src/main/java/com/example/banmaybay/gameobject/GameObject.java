@@ -1,4 +1,4 @@
-package com.example.banmaybay;
+package com.example.banmaybay.gameobject;
 
 import android.graphics.Canvas;
 

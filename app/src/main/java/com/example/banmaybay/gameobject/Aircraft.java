@@ -1,4 +1,4 @@
-package com.example.banmaybay;
+package com.example.banmaybay.gameobject;
 
 import static com.example.banmaybay.MainActivity.SCREEN_HEIGHT;
 import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
@@ -6,39 +6,42 @@ import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
+
+import com.example.banmaybay.GameLoop;
+import com.example.banmaybay.gamepanel.Joystick;
+import com.example.banmaybay.R;
+import com.example.banmaybay.graphics.Sprite;
 
 /*
  * Aircraft is the main character of the game, which you can control
  * by touching the screen or using a joystick
  */
-public class Aircraft extends GameObject{
+public class Aircraft extends GameObject {
 
     private static final double SPEED_PIXELS_PER_SECOND = 600.0;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
+    public static final int AIRCRAFT_SIZE = 200;
     private double anchorPositionX;
     private double anchorPositionY;
     private double oldPositionX;
     private double oldPositionY;
-    private double radius;
-    private Paint paint;
     private double velocityX;
     private double velocityY;
     private Joystick joystick;
+    private Sprite sprite;
 
-    public Aircraft(Context context, Joystick joystick, double positionX, double positionY, double radius) {
+    public Aircraft(Joystick joystick, double positionX, double positionY, Sprite sprite) {
         super(positionX, positionY);
-        this.radius = radius;
         this.joystick = joystick;
-
-        paint = new Paint();
-        int color = ContextCompat.getColor(context, R.color.red);
-        paint.setColor(color);
+        this.sprite = sprite;
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawCircle((float) positionX, (float) positionY, (float) radius, paint);
+        sprite.draw(canvas, (int) positionX, (int) positionY, AIRCRAFT_SIZE);
+        Log.e("", sprite.toString());
     }
 
     public void update() {

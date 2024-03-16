@@ -14,6 +14,10 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.example.banmaybay.gameobject.Aircraft;
+import com.example.banmaybay.gamepanel.Joystick;
+import com.example.banmaybay.graphics.SpriteSheet;
+
 import java.util.Objects;
 
 /*
@@ -26,6 +30,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Context context;
     private Joystick joystick;
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
+    private SpriteSheet spriteSheet;
     public Game(Context context) {
         super(context);
         this.context = getContext();
@@ -42,7 +47,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
 
         // Create an Aircraft
-        aircraft = new Aircraft(context, joystick, (double) SCREEN_WIDTH / 2, (double) (SCREEN_HEIGHT * 8) / 10, 50);
+        spriteSheet = new SpriteSheet(context);
+        aircraft = new Aircraft(joystick, (double) SCREEN_WIDTH / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2, 2));
+
 //        gameMode = "touch";
         gameMode = "joystick";
     }
