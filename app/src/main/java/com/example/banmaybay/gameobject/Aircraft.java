@@ -14,6 +14,7 @@ import com.example.banmaybay.GameLoop;
 import com.example.banmaybay.gamepanel.Joystick;
 import com.example.banmaybay.R;
 import com.example.banmaybay.graphics.Sprite;
+import com.example.banmaybay.graphics.SpriteSheet;
 
 /*
  * Aircraft is the main character of the game, which you can control
@@ -44,10 +45,42 @@ public class Aircraft extends GameObject {
         Log.e("", sprite.toString());
     }
 
-    public void update() {
+    public void update(SpriteSheet spriteSheet) {
+
+        // update position
         velocityX = joystick.getActuatorX() * MAX_SPEED;
         velocityY = joystick.getActuatorY() * MAX_SPEED;
         setPositionOnJoystick(positionX + velocityX, positionY + velocityY);
+
+        // update aircraft
+        int spriteX = 2;
+        int spriteY = 2;
+        if (velocityX > 0.2 * MAX_SPEED) {
+            spriteX++;
+        }
+        if (velocityX > 0.9 * MAX_SPEED) {
+            spriteX++;
+        }
+        if (velocityX < -0.2 * MAX_SPEED) {
+            spriteX--;
+        }
+        if (velocityX < -0.9 * MAX_SPEED) {
+            spriteX--;
+        }
+
+        if (velocityY > 0.2 * MAX_SPEED) {
+            spriteY++;
+        }
+        if (velocityY > 0.9 * MAX_SPEED) {
+            spriteY++;
+        }
+        if (velocityY < -0.2 * MAX_SPEED) {
+            spriteY--;
+        }
+        if (velocityY < -0.9 * MAX_SPEED) {
+            spriteY--;
+        }
+        this.sprite = spriteSheet.getSprite(spriteX, spriteY);
     }
     public void setPositionOnTouch(double positionX, double positionY) {
         double newPositionX = oldPositionX - anchorPositionX + positionX;

@@ -139,6 +139,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         // update all state
         joystick.update();
-        aircraft.update();
+        aircraft.update(spriteSheet);
     }
 }

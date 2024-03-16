@@ -9,8 +9,8 @@ import com.example.banmaybay.R;
 
 public class SpriteSheet {
     private Bitmap bitmap;
-    public static int WIDTH_NUM = 5;
-    public static int HEIGHT_NUM = 5;
+    public static int WIDTH_NUM = 10;
+    public static int HEIGHT_NUM = 10;
     public static int spriteSheetWidth;
     public static int spriteSheetHeight;
 
