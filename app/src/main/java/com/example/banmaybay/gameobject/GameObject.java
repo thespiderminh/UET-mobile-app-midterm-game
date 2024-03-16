@@ -12,11 +12,10 @@ public abstract class GameObject {
     protected double positionX;
     protected double positionY;
 
-    protected GameObject(double positionX, double positionY) {
+    public GameObject(double positionX, double positionY) {
         this.positionX = positionX;
         this.positionY = positionY;
     }
 
-    protected abstract void draw(Canvas canvas);
-    protected abstract void update(SpriteSheet spriteSheet);
+    public abstract void draw(Canvas canvas);
 }

@@ -42,7 +42,6 @@ public class Aircraft extends GameObject {
 
     public void draw(Canvas canvas) {
         sprite.draw(canvas, (int) positionX, (int) positionY, AIRCRAFT_SIZE);
-        Log.e("", sprite.toString());
     }
 
     public void update(SpriteSheet spriteSheet) {

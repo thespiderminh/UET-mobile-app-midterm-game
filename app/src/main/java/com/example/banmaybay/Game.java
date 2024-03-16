@@ -15,10 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.example.banmaybay.gameobject.Aircraft;
+import com.example.banmaybay.gameobject.Enemy;
 import com.example.banmaybay.gamepanel.Joystick;
 import com.example.banmaybay.graphics.SpriteSheet;
 
 import java.util.Objects;
+import java.util.Random;
 
 /*
  * Game manages all objects in the game and is responsible for updating all states
@@ -27,6 +29,7 @@ import java.util.Objects;
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
     private Aircraft aircraft;
+    private Enemy enemy;
     private Context context;
     private Joystick joystick;
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
@@ -48,7 +51,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Create an Aircraft
         spriteSheet = new SpriteSheet(context);
-        aircraft = new Aircraft(joystick, (double) SCREEN_WIDTH / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2, 2));
+        int x = new Random().nextInt((SCREEN_WIDTH * 6) / 10) + (SCREEN_WIDTH * 2) / 10;
+        aircraft = new Aircraft(joystick, x, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2, 2));
+
+        // Create Enemies
+        enemy = new Enemy((double) SCREEN_WIDTH / 2, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0));
 
 //        gameMode = "touch";
         gameMode = "joystick";
@@ -112,6 +119,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawFPS(canvas);
 
         aircraft.draw(canvas);
+        enemy.draw(canvas);
 
         if(joystick.getIsPressed()) {
             joystick.draw(canvas);
@@ -140,5 +148,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // update all state
         joystick.update();
         aircraft.update(spriteSheet);
+        enemy.update(aircraft);
     }
 }
