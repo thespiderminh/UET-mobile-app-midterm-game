@@ -33,11 +33,23 @@ public class Aircraft extends GameObject {
     private double velocityY;
     private Joystick joystick;
     private Sprite sprite;
-
+    private static long fireTime;
+    private static final double SHOOT_PER_SECOND = 1.0;
+    private static final double SECOND_PER_SHOOT = 1.0 / SHOOT_PER_SECOND;
     public Aircraft(Joystick joystick, double positionX, double positionY, Sprite sprite) {
         super(positionX, positionY);
         this.joystick = joystick;
         this.sprite = sprite;
+        fireTime = System.currentTimeMillis();
+    }
+
+    public static boolean readyToFire() {
+        if (System.currentTimeMillis() - fireTime >= SECOND_PER_SHOOT * 1e3) {
+            fireTime = System.currentTimeMillis();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void draw(Canvas canvas) {
@@ -91,7 +103,6 @@ public class Aircraft extends GameObject {
             this.positionY = newPositionY;
         }
     }
-
     public void setPositionOnJoystick(double positionX, double positionY) {
         if(positionX >= 0 && positionX <= SCREEN_WIDTH) {
             this.positionX = positionX;
@@ -100,11 +111,16 @@ public class Aircraft extends GameObject {
             this.positionY = positionY;
         }
     }
-
     public void setAnchorPosition(double anchorPositionX, double anchorPositionY) {
         this.anchorPositionX = anchorPositionX;
         this.anchorPositionY = anchorPositionY;
         this.oldPositionX = positionX;
         this.oldPositionY = positionY;
+    }
+    public double getPositionX() {
+        return positionX;
+    }
+    public double getPositionY() {
+        return positionY;
     }
 }

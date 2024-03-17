@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.example.banmaybay.gameobject.Aircraft;
+import com.example.banmaybay.gameobject.Bullet;
 import com.example.banmaybay.gameobject.Enemy;
 import com.example.banmaybay.gameobject.GameObject;
 import com.example.banmaybay.gamepanel.Joystick;
@@ -34,6 +35,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
     private Aircraft aircraft;
     private List<Enemy> enemyList = new ArrayList<Enemy>();
+    private List<Bullet> bulletList = new ArrayList<Bullet>();
     private Context context;
     private Joystick joystick;
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
@@ -119,10 +121,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawUPS(canvas);
         drawFPS(canvas);
 
-        aircraft.draw(canvas);
         for (Enemy enemy : enemyList) {
             enemy.draw(canvas);
         }
+
+        for (Bullet bullet : bulletList) {
+            bullet.draw(canvas);
+        }
+        aircraft.draw(canvas);
 
         if(joystick.getIsPressed()) {
             joystick.draw(canvas);
@@ -158,9 +164,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             enemyList.add(new Enemy(x, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0), spriteSheet));
         }
 
+        // Spawn new Bullet if possible
+        if (Aircraft.readyToFire()) {
+            bulletList.add(new Bullet(aircraft.getPositionX(), aircraft.getPositionY(), spriteSheet.getSprite(5, 1)));
+        }
 
-        // Check collision between enemies and aircraft
+        // Check collision between enemies and everything else
         for (int i = 0; i < enemyList.size(); i++) {
+            int check = GameObject.isColliding(enemyList.get(i), bulletList);
+            if (check >= 0) {
+                enemyList.get(i).setDestroyed(true);
+                bulletList.remove(check);
+            }
             if (GameObject.isColliding(enemyList.get(i), aircraft)) {
                 enemyList.get(i).setDestroyed(true);
             }
@@ -174,6 +189,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     Enemy.updateUntilNextSpawn -= 1;
                     i--;
                 }
+            }
+        }
+
+        // Update bullets
+        for (int i = 0; i < bulletList.size(); i++) {
+            bulletList.get(i).update();
+            if (bulletList.get(i).outOfScreen()) {
+                bulletList.remove(i);
+                i--;
             }
         }
     }

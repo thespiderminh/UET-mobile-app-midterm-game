@@ -22,7 +22,7 @@ public class Enemy extends GameObject {
     public static double updateUntilNextSpawn = 0;
     private static final double STAGE_PER_SECOND = 60.0;
     private static final double UPDATES_PER_STAGE = GameLoop.MAX_UPS/STAGE_PER_SECOND;
-    private static double updateUntilNextExplodeStage = 0;
+    private double updateUntilNextExplodeStage = 0;
     private final int[][] stages = {{5, 0}, {5, 1}, {5, 2}, {5, 3}, {5, 4}, {5, 5}, {5, 6}, {5, 7},
                     {6, 0}, {6, 1}, {6, 2}, {6, 3}, {6, 4}, {6, 5}, {6, 6}, {6, 7},
                     {7, 0}, {7, 1}, {7, 2}, {7, 3}, {7, 4}, {7, 5}, {7, 6}, {7, 7},
