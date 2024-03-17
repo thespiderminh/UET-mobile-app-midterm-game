@@ -16,4 +16,6 @@
     <color name="blue">#0000FF</color>
     <color name="navy">#000080</color>
     <color name="black">#000000</color>
+    <color name="healthBarColor">#C9C9C9</color>
+    <color name="healthBarHealth">#08FF00</color>
 </resources>

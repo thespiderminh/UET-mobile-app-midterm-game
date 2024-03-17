@@ -27,6 +27,6 @@ public class Bullet extends GameObject{
     }
 
     public boolean outOfScreen() {
-        return positionY <= -SCREEN_HEIGHT / 10.0;
+        return positionY <= -SCREEN_HEIGHT / 20.0;
     }
 }

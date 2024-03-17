@@ -58,10 +58,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Create an Aircraft
         spriteSheet = new SpriteSheet(context);
         int x = new Random().nextInt((SCREEN_WIDTH * 6) / 10) + (SCREEN_WIDTH * 2) / 10;
-        aircraft = new Aircraft(joystick, x, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
+        aircraft = new Aircraft(context, joystick, x, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
 
-//        gameMode = "touch";
-        gameMode = "joystick";
+        gameMode = "touch";
+//        gameMode = "joystick";
     }
 
     // For handling all touch action
@@ -158,7 +158,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick.update();
         aircraft.update(spriteSheet);
 
-        // spawn new enemy if possible
+        // Spawn new enemy if possible
         if (Enemy.readyToSpawn()) {
             int x = (int) (new Random().nextInt((SCREEN_WIDTH * 6) / 10) + (double) (SCREEN_WIDTH * 2) / 10);
             enemyList.add(new Enemy(x, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0), spriteSheet));
@@ -177,6 +177,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 bulletList.remove(check);
             }
             if (GameObject.isColliding(enemyList.get(i), aircraft)) {
+                if (!enemyList.get(i).isDestroyed()) {
+                    aircraft.lossHealth();
+                }
                 enemyList.get(i).setDestroyed(true);
             }
             if (!enemyList.get(i).isDestroyed()) {

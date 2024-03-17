@@ -22,6 +22,7 @@ import com.example.banmaybay.graphics.SpriteSheet;
  */
 public class Aircraft extends GameObject {
 
+    public final int MAX_HEALTH_POINT = 4;
     private static final double SPEED_PIXELS_PER_SECOND = 600.0;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     public static final int AIRCRAFT_SIZE = 200;
@@ -36,11 +37,16 @@ public class Aircraft extends GameObject {
     private static long fireTime;
     private static final double SHOOT_PER_SECOND = 1.0;
     private static final double SECOND_PER_SHOOT = 1.0 / SHOOT_PER_SECOND;
-    public Aircraft(Joystick joystick, double positionX, double positionY, Sprite sprite) {
+    private HealthBar healthBar;
+    private int healthPoint;
+
+    public Aircraft(Context context, Joystick joystick, double positionX, double positionY, Sprite sprite) {
         super(positionX, positionY);
         this.joystick = joystick;
         this.sprite = sprite;
         fireTime = System.currentTimeMillis();
+        this.healthBar = new HealthBar(context);
+        this.healthPoint = MAX_HEALTH_POINT;
     }
 
     public static boolean readyToFire() {
@@ -54,6 +60,7 @@ public class Aircraft extends GameObject {
 
     public void draw(Canvas canvas) {
         sprite.draw(canvas, (int) positionX, (int) positionY, AIRCRAFT_SIZE);
+        healthBar.draw(canvas, this);
     }
 
     public void update(SpriteSheet spriteSheet) {
@@ -122,5 +129,13 @@ public class Aircraft extends GameObject {
     }
     public double getPositionY() {
         return positionY;
+    }
+
+    public int getHealthPoint() {
+        return healthPoint;
+    }
+
+    public void lossHealth() {
+        healthPoint--;
     }
 }
