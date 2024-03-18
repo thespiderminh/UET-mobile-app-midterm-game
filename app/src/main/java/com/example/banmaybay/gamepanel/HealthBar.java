@@ -1,4 +1,4 @@
-package com.example.banmaybay.gameobject;
+package com.example.banmaybay.gamepanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.example.banmaybay.R;
+import com.example.banmaybay.gameobject.Aircraft;
 
 public class HealthBar {
     private float width, height, margin;

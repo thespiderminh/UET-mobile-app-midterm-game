@@ -9,8 +9,8 @@ import com.example.banmaybay.graphics.Sprite;
 import com.example.banmaybay.graphics.SpriteSheet;
 
 public class Bullet extends GameObject{
-    public static final int BULLET_SIZE = 200;
-    private static final double SPEED_PIXELS_PER_SECOND = 600.0;
+    public static final int BULLET_SIZE = 300;
+    private static final double SPEED_PIXELS_PER_SECOND = 1000.0;
     public static final double BULLET_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private Sprite sprite;
     public Bullet(double positionX, double positionY, Sprite sprite) {

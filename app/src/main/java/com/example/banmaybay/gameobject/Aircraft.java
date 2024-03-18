@@ -5,14 +5,10 @@ import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.util.Log;
-
-import androidx.core.content.ContextCompat;
 
 import com.example.banmaybay.GameLoop;
+import com.example.banmaybay.gamepanel.HealthBar;
 import com.example.banmaybay.gamepanel.Joystick;
-import com.example.banmaybay.R;
 import com.example.banmaybay.graphics.Sprite;
 import com.example.banmaybay.graphics.SpriteSheet;
 
@@ -137,5 +133,6 @@ public class Aircraft extends GameObject {
 
     public void lossHealth() {
         healthPoint--;
+        healthPoint = Math.max(healthPoint, 0);
     }
 }

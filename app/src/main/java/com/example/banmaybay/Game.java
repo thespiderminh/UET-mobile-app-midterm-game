@@ -18,11 +18,12 @@ import com.example.banmaybay.gameobject.Aircraft;
 import com.example.banmaybay.gameobject.Bullet;
 import com.example.banmaybay.gameobject.Enemy;
 import com.example.banmaybay.gameobject.GameObject;
+import com.example.banmaybay.gamepanel.GameOver;
 import com.example.banmaybay.gamepanel.Joystick;
+import com.example.banmaybay.gamepanel.Performance;
 import com.example.banmaybay.graphics.SpriteSheet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -34,15 +35,16 @@ import java.util.Random;
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
     private Aircraft aircraft;
-    private List<Enemy> enemyList = new ArrayList<Enemy>();
-    private List<Bullet> bulletList = new ArrayList<Bullet>();
-    private Context context;
+    private List<Enemy> enemyList = new ArrayList<>();
+    private List<Bullet> bulletList = new ArrayList<>();
     private Joystick joystick;
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
     private SpriteSheet spriteSheet;
+    private GameOver gameOver;
+    private Performance performance;
+
     public Game(Context context) {
         super(context);
-        this.context = getContext();
 
         // Get surface holder and add callback
         SurfaceHolder surfaceHolder = getHolder();
@@ -52,7 +54,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
         setFocusable(true);
 
-        // Create joystick
+        // Initialize game panels
+        performance = new Performance(context, gameLoop);
+        gameOver = new GameOver(context);
         joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
 
         // Create an Aircraft
@@ -118,8 +122,17 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        drawUPS(canvas);
-        drawFPS(canvas);
+
+        // Draw GAME OVER if the player is dead
+        if (aircraft.getHealthPoint() <= 0) {
+            gameOver.draw(canvas);
+        }
+
+        // Draw game panels
+        if(joystick.getIsPressed()) {
+            joystick.draw(canvas);
+        }
+        performance.draw(canvas);
 
         for (Enemy enemy : enemyList) {
             enemy.draw(canvas);
@@ -129,31 +142,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             bullet.draw(canvas);
         }
         aircraft.draw(canvas);
-
-        if(joystick.getIsPressed()) {
-            joystick.draw(canvas);
-        }
-    }
-
-    private void drawUPS(Canvas canvas) {
-        String averageUPS = Double.toString(gameLoop.getAverageUPS());
-        Paint paint = new Paint();
-        int color = ContextCompat.getColor(context, R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(50);
-        canvas.drawText("UPS: " + averageUPS, 100, 50, paint);
-    }
-
-    private void drawFPS(Canvas canvas) {
-        String averageFPS = Double.toString(gameLoop.getAverageFPS());
-        Paint paint = new Paint();
-        int color = ContextCompat.getColor(context, R.color.magenta);
-        paint.setColor(color);
-        paint.setTextSize(50);
-        canvas.drawText("FPS: " + averageFPS, 100, 150, paint);
     }
 
     public void update() {
+
+        // Stop updating the game if your aircraft is dead
+        if (aircraft.getHealthPoint() <= 0) {
+            return;
+        }
+
         // update states
         joystick.update();
         aircraft.update(spriteSheet);
