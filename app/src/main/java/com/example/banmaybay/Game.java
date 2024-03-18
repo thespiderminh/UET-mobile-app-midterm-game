@@ -22,6 +22,7 @@ import com.example.banmaybay.gameobject.GameObject;
 import com.example.banmaybay.gamepanel.GameOver;
 import com.example.banmaybay.gamepanel.Joystick;
 import com.example.banmaybay.gamepanel.Performance;
+import com.example.banmaybay.graphics.BackGround;
 import com.example.banmaybay.graphics.SpriteSheet;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private SpriteSheet spriteSheet;
     private GameOver gameOver;
     private Performance performance;
+    private BackGround background;
 
     public Game(Context context) {
         super(context);
@@ -55,6 +57,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
         setFocusable(true);
 
+        background = new BackGround(context);
+
         // Initialize game panels
         performance = new Performance(context, gameLoop);
         gameOver = new GameOver(context);
@@ -62,8 +66,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Create an Aircraft
         spriteSheet = new SpriteSheet(context);
-        int x = new Random().nextInt((SCREEN_WIDTH * 6) / 10) + (SCREEN_WIDTH * 2) / 10;
-        aircraft = new Aircraft(context, joystick, x, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
+        aircraft = new Aircraft(context, joystick, (double) (SCREEN_WIDTH) / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
 
         gameMode = "touch";
 //        gameMode = "joystick";
@@ -127,6 +130,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+
+        // Draw a background
+        background.draw(canvas);
+
 
         // Draw GAME OVER if the player is dead
         if (aircraft.getHealthPoint() <= 0) {

@@ -16,7 +16,7 @@ import java.util.Random;
 public class Enemy extends GameObject {
     public static final int ENEMY_SIZE = 150;
     public static final int ENEMY_MAX_SPEED = 5;
-    private static final double SPAWN_PER_MINUTE = 50;
+    private static final double SPAWN_PER_MINUTE = 70;
     private static final double SPAWN_PER_SECOND = SPAWN_PER_MINUTE/60.0;
     private static final double UPDATES_PER_SPAWN = GameLoop.MAX_UPS/SPAWN_PER_SECOND;
     public static double updateUntilNextSpawn = 0;
