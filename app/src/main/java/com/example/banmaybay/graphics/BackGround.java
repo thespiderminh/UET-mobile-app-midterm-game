@@ -5,9 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.provider.MediaStore;
-
-import androidx.core.content.ContextCompat;
 
 import com.example.banmaybay.R;
 
@@ -18,7 +15,7 @@ public class BackGround {
     public BackGround(Context context) {
         this.context = context;
         this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-        this.rect = new Rect(0, 0, 500, 1024);
+        this.rect = new Rect(0, 0, 600, 1024);
     }
 
     public void draw(Canvas canvas) {
