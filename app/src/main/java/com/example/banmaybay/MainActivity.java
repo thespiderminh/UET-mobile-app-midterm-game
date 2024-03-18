@@ -1,7 +1,9 @@
 package com.example.banmaybay;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -20,8 +22,11 @@ import com.example.banmaybay.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
     public static int SCREEN_WIDTH;
     public static int SCREEN_HEIGHT;
+    private Game game;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity.java", "onCreate()");
         super.onCreate(savedInstanceState);
 
         // Set window to fullscreen and hide status bar
@@ -33,6 +38,38 @@ public class MainActivity extends AppCompatActivity {
         SCREEN_WIDTH = displayMetrics.widthPixels;
 
         // Set content view to game, so that objects in the Game class can be rendered to the screen
-        setContentView(new Game(this));
+        game = new Game(this);
+        setContentView(game);
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d("MainActivity.java", "onStart()");
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d("MainActivity.java", "onResume()");
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d("MainActivity.java", "onPause()");
+        game.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("MainActivity.java", "onDestroy()");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d("MainActivity.java", "onStop()");
+        super.onStop();
     }
 }

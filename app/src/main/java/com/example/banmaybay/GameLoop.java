@@ -1,6 +1,7 @@
 package com.example.banmaybay;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class GameLoop extends Thread {
@@ -26,12 +27,14 @@ public class GameLoop extends Thread {
     }
 
     public void startLoop() {
+        Log.d("GameLoop.java", "startLoop()");
         isRunning = true;
         start();
     }
 
     @Override
     public void run() {
+        Log.d("GameLoop.java", "run()");
         super.run();
 
         // Declare time and cycle count variables
@@ -46,12 +49,14 @@ public class GameLoop extends Thread {
         Canvas canvas = null;
         startTime = System.currentTimeMillis();
         while(isRunning) {
+
             // Try to update and render game
             try {
                 canvas = surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
                     game.update();
                     updateCount++;
+
                     game.draw(canvas);
                 }
             } catch (IllegalArgumentException e) {
@@ -78,7 +83,7 @@ public class GameLoop extends Thread {
                 }
             }
 
-            // skip frame to keep up with the UPS
+            // Skip frame to keep up with the UPS
             while(sleepTime < 0 && updateCount < MAX_UPS - 1) {
                 game.update();
                 updateCount++;
@@ -95,6 +100,17 @@ public class GameLoop extends Thread {
                 frameCount = 0;
                 startTime = System.currentTimeMillis();
             }
+        }
+    }
+
+    public void stopLoop() {
+        Log.d("GameLoop.java", "stopLoop()");
+        isRunning = false;
+        // Wait for the thread to join
+        try {
+            join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
