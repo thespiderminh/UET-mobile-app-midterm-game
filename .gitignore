@@ -2,5 +2,5 @@
 .gradle
 /build
 gradle
-local.properties
 /gradlew.bat
+*.properties
