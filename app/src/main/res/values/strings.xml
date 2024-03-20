@@ -2,5 +2,7 @@
     <string name="app_name">BanMayBay</string>
     <string name="todo">TODO</string>
     <string name="todo1">TODO</string>
-    <string name="go_back">Go Back</string>
+    <string name="resume_game">Resume game</string>
+    <string name="restart_game">Restart game</string>
+    <string name="quit_game">Quit game</string>
 </resources>

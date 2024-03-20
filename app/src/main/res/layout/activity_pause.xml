@@ -8,15 +8,42 @@
     android:background="@drawable/background"
     tools:context=".PauseActivity">
 
-    <Button
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/go_back"
-        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginHorizontal="60dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/resumeGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/resume_game"
+            android:textSize="30sp"
+            android:layout_margin="20dp"/>
+
+        <Button
+            android:id="@+id/restartGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/restart_game"
+            android:textSize="30sp"
+            android:layout_margin="20dp"/>
+
+        <Button
+            android:id="@+id/quitGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/quit_game"
+            android:textSize="30sp"
+            android:layout_margin="20dp"/>
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

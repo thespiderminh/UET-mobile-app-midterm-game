@@ -22,9 +22,20 @@ public class PauseActivity extends AppCompatActivity {
         binding = ActivityPauseBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.textView.setOnClickListener(v -> {
+        binding.resumeGame.setOnClickListener(v -> {
             MainActivity.game.isPause = false;
             this.finish();
+        });
+
+        binding.restartGame.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent, null);
+            this.finish();
+        });
+
+        binding.quitGame.setOnClickListener(v -> {
+            this.finishAffinity();
+            System.exit(0);
         });
     }
 }
