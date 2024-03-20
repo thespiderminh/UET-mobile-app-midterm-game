@@ -6,17 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context=".PauseActivity">
+    tools:context=".StartMenu">
 
-    <Button
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/go_back"
-        android:textSize="24sp"
+    <ImageButton
+        android:id="@+id/btPlay"
+        android:layout_width="324dp"
+        android:layout_height="106dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="140dp"
+        android:background="@null"
+        android:contentDescription="@string/todo1"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:srcCompat="@drawable/play_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
