@@ -1,7 +1,6 @@
 package com.example.banmaybay;
 
 import android.animation.Animator;
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -23,7 +22,6 @@ import com.example.banmaybay.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
     public static int SCREEN_WIDTH;
     public static int SCREEN_HEIGHT;
-    @SuppressLint("StaticFieldLeak")
     public static Game game;
 
     @Override
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         // Set window to fullscreen and hide status bar
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         SCREEN_HEIGHT = displayMetrics.heightPixels;

@@ -1,12 +1,10 @@
 package com.example.banmaybay;
 
-import static androidx.core.content.ContextCompat.startActivity;
 import static com.example.banmaybay.MainActivity.SCREEN_HEIGHT;
 import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
@@ -50,12 +48,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private BackGround background;
     private GamePause gamePause;
     public boolean isPause = false;
-    private Context context;
-    private int castNumberOfPause = 0;
 
     public Game(Context context) {
         super(context);
-        this.context = context;
 
         // Get surface holder and add callback
         SurfaceHolder surfaceHolder = getHolder();
@@ -129,8 +124,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         Log.d("Game.java", "surfaceCreated()");
         if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
             gameLoop = new GameLoop(this, holder);
-            isPause = false;
-            castNumberOfPause = 0;
         }
         gameLoop.startLoop();
     }
@@ -172,15 +165,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        // Stop updating the game if your aircraft is dead
-        if (aircraft.getHealthPoint() <= 0) {
-            return;
-        }
 
-        if (isPause && castNumberOfPause == 0) {
-            Intent intent = new Intent(this.context, PauseActivity.class);
-            startActivity(context, intent, null);
-            castNumberOfPause++;
+        // Stop updating the game if your aircraft is dead
+        if (aircraft.getHealthPoint() <= 0 || isPause) {
             return;
         }
 
