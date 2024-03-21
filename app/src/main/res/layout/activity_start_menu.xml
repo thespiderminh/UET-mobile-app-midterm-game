@@ -11,13 +11,30 @@
     <ImageButton
         android:id="@+id/btPlay"
         android:layout_width="324dp"
-        android:layout_height="106dp"
+        android:layout_height="0dp"
         android:layout_marginStart="40dp"
-        android:layout_marginBottom="140dp"
+        android:layout_marginTop="391dp"
+        android:layout_marginBottom="54dp"
         android:background="@null"
         android:contentDescription="@string/todo1"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btContact"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/play_button" />
+
+    <ImageButton
+        android:id="@+id/btContact"
+        android:layout_width="59dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btPlay"
+        app:srcCompat="@drawable/contact_button"
+        android:contentDescription="@string/todo2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
