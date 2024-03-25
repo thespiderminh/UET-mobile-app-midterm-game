@@ -14,6 +14,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import android.media.AudioManager;
+import android.media.SoundPool;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
@@ -32,6 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
  * Game manages all objects in the game and is responsible for updating all states
@@ -46,12 +52,18 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
     private SpriteSheet spriteSheet;
     private GameOver gameOver;
+    private boolean gameIsOver;
     private Performance performance;
     private BackGround background;
     private GamePause gamePause;
     public boolean isPause = false;
     private Context context;
     private int castNumberOfPause = 0;
+
+    // Variable for recreating sound effects
+    private final SoundEffect sound;
+    private final CountDownLatch soundLatch = new CountDownLatch(1);
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public Game(Context context) {
         super(context);
@@ -71,11 +83,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         performance = new Performance(context, gameLoop);
         gamePause = new GamePause(context);
         gameOver = new GameOver(context);
+        gameIsOver = false;
         joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
 
         // Create an Aircraft
         spriteSheet = new SpriteSheet(context);
         aircraft = new Aircraft(context, joystick, (double) (SCREEN_WIDTH) / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
+
+        // Sound
+        sound = new SoundEffect(this.getContext());
 
 //        gameMode = "touch";
         gameMode = "joystick";
@@ -149,7 +165,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         background.draw(canvas);
 
         // Draw GAME OVER if the player is dead
-        if (aircraft.getHealthPoint() <= 0) {
+        if (gameIsOver) {
             gameOver.draw(canvas);
         }
 
@@ -174,10 +190,19 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Stop updating the game if your aircraft is dead
         if (aircraft.getHealthPoint() <= 0) {
+            gameIsOver = true;
+            sound.gameOver();
+            try {
+                soundLatch.await(); // Wait for onGameOverFinished() to be called
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            onGameOverFinished(); // Call onGameOverFinished() before returning
             return;
         }
 
         if (isPause && castNumberOfPause == 0) {
+            sound.buttonClick();
             Intent intent = new Intent(this.context, PauseActivity.class);
             startActivity(context, intent, null);
             castNumberOfPause++;
@@ -192,29 +217,38 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (Enemy.readyToSpawn()) {
             int x = (int) (new Random().nextInt((SCREEN_WIDTH * 6) / 10) + (double) (SCREEN_WIDTH * 2) / 10);
             enemyList.add(new Enemy(x, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0), spriteSheet));
+            sound.enemySpawn();
         }
 
         // Spawn new Bullet if possible
         if (Aircraft.readyToFire()) {
             bulletList.add(new Bullet(aircraft.getPositionX(), aircraft.getPositionY(), spriteSheet.getSprite(5, 1)));
+            sound.shootingSound();
         }
 
         // Check collision between enemies and everything else
         for (int i = 0; i < enemyList.size(); i++) {
+            // Enemy trúng đạn
             int check = GameObject.isColliding(enemyList.get(i), bulletList);
             if (check >= 0) {
+                sound.enemyDestroyed();
                 enemyList.get(i).setDestroyed(true);
                 bulletList.remove(check);
             }
+
+            // Enemy trúng aircraft
             if (GameObject.isColliding(enemyList.get(i), aircraft)) {
                 if (!enemyList.get(i).isDestroyed()) {
                     aircraft.lossHealth();
                 }
+                sound.enemyBreak();
                 enemyList.get(i).setDestroyed(true);
             }
+
+            // Enemy vẫn sống
             if (!enemyList.get(i).isDestroyed()) {
                 enemyList.get(i).update(aircraft);
-            } else {
+            } else { // Enemy chết
                 if (!enemyList.get(i).isFinishExplode()) {
                     enemyList.get(i).explode();
                 } else {
@@ -233,6 +267,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 i--;
             }
         }
+    }
+
+    // Call this method when sound.gameOver() is finished
+    public void onGameOverFinished() {
+        soundLatch.countDown(); // Signal that sound.gameOver() is finished
     }
 
     public void pause() {
