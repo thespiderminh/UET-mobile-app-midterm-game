@@ -1,6 +1,7 @@
 package com.example.banmaybay;
 
 import android.animation.Animator;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -23,11 +24,16 @@ public class MainActivity extends AppCompatActivity {
     public static int SCREEN_WIDTH;
     public static int SCREEN_HEIGHT;
     public static Game game;
+    public static MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MainActivity.java", "onCreate()");
         super.onCreate(savedInstanceState);
+
+        // Background music
+        mediaPlayer = MediaPlayer.create(this, R.raw.cyclop);
+        mediaPlayer.setLooping(true);
 
         // Set window to fullscreen and hide status bar
         Window window = getWindow();
@@ -46,12 +52,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         Log.d("MainActivity.java", "onStart()");
         super.onStart();
+        mediaPlayer.start();
     }
 
     @Override
     protected void onResume() {
         Log.d("MainActivity.java", "onResume()");
         super.onResume();
+        mediaPlayer.start();
     }
 
     @Override
@@ -59,12 +67,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity.java", "onPause()");
         game.pause();
         super.onPause();
+        mediaPlayer.pause();
     }
 
     @Override
     protected void onDestroy() {
         Log.d("MainActivity.java", "onDestroy()");
         super.onDestroy();
+        mediaPlayer.release();
     }
 
     @Override
