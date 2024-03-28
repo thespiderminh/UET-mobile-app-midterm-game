@@ -15,6 +15,10 @@
         android:theme="@style/Theme.BanMayBay"
         tools:targetApi="31">
         <activity
+            android:name=".SettingMenu"
+            android:exported="false"
+            android:theme="@style/Theme.BanMayBay" />
+        <activity
             android:name=".ContactMenu"
             android:exported="false" />
         <activity

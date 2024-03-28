@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class StartMenu extends AppCompatActivity {
 
     ImageButton btPlay;
-    ImageButton btContact;
+    ImageButton btContact, btSetting;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,7 @@ public class StartMenu extends AppCompatActivity {
         setContentView(R.layout.activity_start_menu);
         btPlay = (ImageButton) findViewById(R.id.btPlay);
         btContact = (ImageButton) findViewById(R.id.btContact);
+        btSetting = (ImageButton) findViewById(R.id.btSetting);
         btContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,6 +36,13 @@ public class StartMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
+                startActivity(myIntent);
+            }
+        });
+        btSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(StartMenu.this, SettingMenu.class);
                 startActivity(myIntent);
             }
         });
