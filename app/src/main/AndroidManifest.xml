@@ -13,20 +13,23 @@
         android:theme="@style/Theme.BanMayBay"
         tools:targetApi="31">
         <activity
+            android:name=".activities.GameOverActivity"
+            android:exported="false" />
+        <activity
             android:name=".GameOverMenu"
             android:exported="true" />
 
         <service
-            android:name=".InGameMusic"
+            android:name=".musicandsound.InGameMusic"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".StartMusic"
+            android:name=".musicandsound.StartMusic"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".StartMenu"
+            android:name=".activities.StartMenu"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
@@ -37,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PauseActivity"
+            android:name=".activities.PauseActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

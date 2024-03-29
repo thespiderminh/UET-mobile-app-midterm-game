@@ -5,4 +5,7 @@
     <string name="resume_game">Resume game</string>
     <string name="restart_game">Restart game</string>
     <string name="quit_game">Quit game</string>
+    <string name="game_over">GAME OVER</string>
+    <string name="retry">Retry</string>
+    <string name="main_menu">Main menu</string>
 </resources>

@@ -1,9 +1,11 @@
-package com.example.banmaybay;
+package com.example.banmaybay.musicandsound;
 
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+
+import com.example.banmaybay.R;
 
 public class StartMusic extends Service {
     public static MediaPlayer mediaPlayerStart;

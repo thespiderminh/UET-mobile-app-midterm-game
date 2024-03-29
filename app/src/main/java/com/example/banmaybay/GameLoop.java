@@ -1,9 +1,10 @@
 package com.example.banmaybay;
 
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
+
+import com.example.banmaybay.musicandsound.StartMusic;
 
 public class GameLoop extends Thread {
     private final Game game;
@@ -57,11 +58,6 @@ public class GameLoop extends Thread {
                 synchronized (surfaceHolder) {
                     game.update();
                     updateCount++;
-                    if (Game.gameIsOver == true) {
-                        StartMusic.mediaPlayerStart.start();
-                        MainActivity.mediaPlayer.release();
-                    }
-
                     game.draw(canvas);
                 }
             } catch (IllegalArgumentException e) {

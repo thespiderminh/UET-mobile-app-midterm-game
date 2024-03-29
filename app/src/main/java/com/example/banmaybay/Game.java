@@ -14,30 +14,27 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import android.media.AudioManager;
-import android.media.SoundPool;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.example.banmaybay.activities.GameOverActivity;
+import com.example.banmaybay.activities.PauseActivity;
 import com.example.banmaybay.gameobject.Aircraft;
 import com.example.banmaybay.gameobject.Bullet;
 import com.example.banmaybay.gameobject.Enemy;
 import com.example.banmaybay.gameobject.GameObject;
-import com.example.banmaybay.gamepanel.GameOver;
 import com.example.banmaybay.gamepanel.GamePause;
 import com.example.banmaybay.gamepanel.Joystick;
 import com.example.banmaybay.gamepanel.Performance;
 import com.example.banmaybay.graphics.BackGround;
 import com.example.banmaybay.graphics.SpriteSheet;
+import com.example.banmaybay.musicandsound.SoundEffect;
+import com.example.banmaybay.musicandsound.StartMusic;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /*
  * Game manages all objects in the game and is responsible for updating all states
@@ -51,8 +48,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Joystick joystick;
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
     private SpriteSheet spriteSheet;
-    private GameOver gameOver;
-    public static boolean gameIsOver;
     private Performance performance;
     private BackGround background;
     private GamePause gamePause;
@@ -62,9 +57,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     // Variable for recreating sound effects
     private final SoundEffect sound;
-    private final CountDownLatch soundLatch = new CountDownLatch(1);
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
+    private int score;
     public Game(Context context) {
         super(context);
         this.context = context;
@@ -82,8 +75,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Initialize game panels
         performance = new Performance(context, gameLoop);
         gamePause = new GamePause(context);
-        gameOver = new GameOver(context);
-        gameIsOver = false;
         joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
 
         // Create an Aircraft
@@ -92,6 +83,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Sound
         sound = new SoundEffect(this.getContext());
+
+        score = 0;
 
 //        gameMode = "touch";
         gameMode = "joystick";
@@ -146,6 +139,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
             gameLoop = new GameLoop(this, holder);
             castNumberOfPause = 0;
+            score = 0;
         }
         gameLoop.startLoop();
     }
@@ -164,17 +158,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Draw a background
         background.draw(canvas);
 
-        // Draw GAME OVER if the player is dead
-        if (gameIsOver) {
-            gameOver.draw(canvas);
-        }
-
         // Draw game panels
         gamePause.draw(canvas);
         if(joystick.getIsPressed()) {
             joystick.draw(canvas);
         }
         performance.draw(canvas);
+        drawScore(canvas);
 
         for (Enemy enemy : enemyList) {
             enemy.draw(canvas);
@@ -186,12 +176,27 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         aircraft.draw(canvas);
     }
 
+    private void drawScore(Canvas canvas) {
+        Paint paint = new Paint();
+        int color = ContextCompat.getColor(context, R.color.magenta);
+        paint.setColor(color);
+        paint.setTextSize(50);
+        canvas.drawText("Score: " + score, 100, 250, paint);
+    }
+
     public void update() {
 
         // Stop updating the game if your aircraft is dead
         if (aircraft.getHealthPoint() <= 0) {
-            gameIsOver = true;
+            StartMusic.mediaPlayerStart.start();
+            MainActivity.mediaPlayer.release();
+            sound.buttonClick();
 
+            Intent intent = new Intent(this.context, GameOverActivity.class);
+            intent.putExtra("Score", score);
+            startActivity(context, intent, null);
+
+            castNumberOfPause++;
             return;
         }
 
@@ -228,6 +233,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 sound.enemyDestroyed();
                 enemyList.get(i).setDestroyed(true);
                 bulletList.remove(check);
+                score++;
             }
 
             // Enemy trúng aircraft
