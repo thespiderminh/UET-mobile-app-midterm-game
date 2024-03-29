@@ -18,7 +18,8 @@ public class StartMenu extends AppCompatActivity {
 
     ImageButton btPlay;
     SoundEffect sound;
-    MediaPlayer mediaPlayer;
+
+    public boolean startMusicIsPlaying = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +27,7 @@ public class StartMenu extends AppCompatActivity {
         setContentView(R.layout.activity_start_menu);
         btPlay = (ImageButton) findViewById(R.id.btPlay);
         sound = new SoundEffect(this.getApplicationContext());
-        mediaPlayer = MediaPlayer.create(this, R.raw.battle_theme);
-        mediaPlayer.setLooping(true);
+
         btPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,10 +36,11 @@ public class StartMenu extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                StartMusic.mediaPlayerStart.pause();
 
-                mediaPlayer.stop();
                 Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
                 startActivity(myIntent);
+
             }
         });
     }
@@ -47,6 +48,11 @@ public class StartMenu extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mediaPlayer.start();
+
+//        mediaPlayer = MediaPlayer.create(this, R.raw.battle_theme);
+//        mediaPlayer.start();
+
+        Intent startMusic = new Intent(StartMenu.this, StartMusic.class);
+        startService(startMusic);
     }
 }

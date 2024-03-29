@@ -1,6 +1,6 @@
 package com.example.banmaybay;
 
-import static com.example.banmaybay.MainActivity.mediaPlayer;
+// import static com.example.banmaybay.MainActivity.mediaPlayer;
 
 import android.content.Intent;
 import android.os.Bundle;
