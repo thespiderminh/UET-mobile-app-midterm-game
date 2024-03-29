@@ -52,7 +52,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
     private SpriteSheet spriteSheet;
     private GameOver gameOver;
-    private boolean gameIsOver;
+    public static boolean gameIsOver;
     private Performance performance;
     private BackGround background;
     private GamePause gamePause;
@@ -191,13 +191,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Stop updating the game if your aircraft is dead
         if (aircraft.getHealthPoint() <= 0) {
             gameIsOver = true;
-            sound.gameOver();
-            try {
-                soundLatch.await(); // Wait for onGameOverFinished() to be called
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            onGameOverFinished(); // Call onGameOverFinished() before returning
+
             return;
         }
 
@@ -267,11 +261,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 i--;
             }
         }
-    }
-
-    // Call this method when sound.gameOver() is finished
-    public void onGameOverFinished() {
-        soundLatch.countDown(); // Signal that sound.gameOver() is finished
     }
 
     public void pause() {
