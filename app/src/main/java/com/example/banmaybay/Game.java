@@ -189,7 +189,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Stop updating the game if your aircraft is dead
         if (aircraft.getHealthPoint() <= 0) {
             StartMusic.mediaPlayerStart.start();
-            MainActivity.mediaPlayer.release();
             sound.buttonClick();
 
             Intent intent = new Intent(this.context, GameOverActivity.class);
