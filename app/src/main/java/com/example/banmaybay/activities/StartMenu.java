@@ -16,9 +16,7 @@ public class StartMenu extends AppCompatActivity {
 
     ImageButton btPlay;
     SoundEffect sound;
-
-    public boolean startMusicIsPlaying = true;
-
+    private String color = "white";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +35,7 @@ public class StartMenu extends AppCompatActivity {
                 StartMusic.mediaPlayerStart.pause();
 
                 Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
+                myIntent.putExtra("Color", color);
                 startActivity(myIntent);
 
             }

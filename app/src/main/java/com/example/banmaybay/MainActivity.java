@@ -43,9 +43,11 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         SCREEN_HEIGHT = displayMetrics.heightPixels;
         SCREEN_WIDTH = displayMetrics.widthPixels;
+        Intent intent = getIntent();
+        String color = intent.getStringExtra("Color");
 
         // Set content view to game, so that objects in the Game class can be rendered to the screen
-        game = new Game(this);
+        game = new Game(this, color);
         setContentView(game);
     }
 
