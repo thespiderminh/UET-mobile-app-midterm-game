@@ -80,7 +80,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
 
         // Create an Aircraft
-        spriteSheet = new SpriteSheet(context, color);
+        spriteSheet = new SpriteSheet(context, this.color);
         aircraft = new Aircraft(context, joystick, (double) (SCREEN_WIDTH) / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
 
         // Sound
@@ -195,6 +195,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
             Intent intent = new Intent(this.context, GameOverActivity.class);
             intent.putExtra("Score", score);
+            intent.putExtra("Color", color);
             startActivity(context, intent, null);
 
             castNumberOfPause++;

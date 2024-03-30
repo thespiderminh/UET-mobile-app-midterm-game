@@ -53,31 +53,30 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Log.d("MainActivity.java", "mediaPlayer.start()");
+        Log.d("MainActivity.java", "onStart()\nmediaPlayer.start()");
         super.onStart();
         mediaPlayer.start();
     }
 
     @Override
     protected void onResume() {
-        Log.d("MainActivity.java", "mediaPlayer.start()");
+        Log.d("MainActivity.java", "onResume");
         super.onResume();
-        mediaPlayer.start();
     }
 
     @Override
     protected void onPause() {
-        Log.d("MainActivity.java", "mediaPlayer.pause()");
+        Log.d("MainActivity.java", "onPause()\nmediaPlayer.pause()");
         game.pause();
-        super.onPause();
         mediaPlayer.pause();
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        Log.d("MainActivity.java", "mediaPlayer.release()");
+        Log.d("MainActivity.java", "onDestroy()\nmediaPlayer.release()");
+        mediaPlayer.release();
         super.onDestroy();
-        mediaPlayer.pause();
     }
 
     @Override

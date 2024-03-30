@@ -17,6 +17,7 @@ public class SpriteSheet {
     public SpriteSheet(Context context, String color) {
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inScaled = false;
+        Log.d("SpriteSheet.java", "constructor\n" + color);
         switch (color) {
             case "red":
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_red);
