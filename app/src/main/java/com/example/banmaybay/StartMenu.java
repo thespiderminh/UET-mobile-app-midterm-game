@@ -3,11 +3,14 @@ package com.example.banmaybay;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,16 +18,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class StartMenu extends AppCompatActivity {
 
-    ImageButton btPlay;
-    ImageButton btContact, btSetting;
+    Button btPlay, btOptions, btQuit;
+    ImageButton btContact;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_menu);
-        btPlay = (ImageButton) findViewById(R.id.btPlay);
+        btPlay = (Button) findViewById(R.id.btStart);
+        btOptions = (Button) findViewById(R.id.btOptions);
+        btQuit = (Button) findViewById(R.id.btQuit);
         btContact = (ImageButton) findViewById(R.id.btContact);
-        btSetting = (ImageButton) findViewById(R.id.btSetting);
         btContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,12 +43,34 @@ public class StartMenu extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
-        btSetting.setOnClickListener(new View.OnClickListener() {
+        btOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(StartMenu.this, SettingMenu.class);
-                startActivity(myIntent);
+                showMenu();
             }
         });
+    }
+
+    private void showMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, btOptions);
+        popupMenu.getMenuInflater().inflate(R.menu.options_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if(itemId == R.id.setting) {
+                    Intent intent = new Intent(StartMenu.this, SettingMenu.class);
+                    startActivity(intent);
+                } else if(itemId == R.id.highScore) {
+                    Intent intent = new Intent(StartMenu.this, ViewHighScore.class);
+                    startActivity(intent);
+                } else if (itemId == R.id.about) {
+                    Intent intent = new Intent(StartMenu.this, About.class);
+                    startActivity(intent);
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 }

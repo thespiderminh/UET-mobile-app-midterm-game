@@ -9,50 +9,57 @@
     tools:context=".StartMenu">
 
     <ImageButton
-        android:id="@+id/btPlay"
-        android:layout_width="324dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="391dp"
-        android:layout_marginBottom="88dp"
-        android:background="@null"
-        android:contentDescription="@string/todo1"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/btSetting"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/play_button" />
-
-    <ImageButton
         android:id="@+id/btContact"
-        android:layout_width="59dp"
-        android:layout_height="66dp"
+        android:layout_width="68dp"
+        android:layout_height="56dp"
         android:layout_marginEnd="44dp"
+        android:layout_marginBottom="61dp"
         android:background="@null"
         android:contentDescription="@string/todo2"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btSetting"
-        app:layout_constraintTop_toBottomOf="@+id/btPlay"
-        app:layout_constraintVertical_bias="0.645"
         app:srcCompat="@drawable/contact_button" />
 
-    <ImageButton
-        android:id="@+id/btSetting"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/btStart"
+        android:layout_width="143dp"
         android:layout_height="0dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="206dp"
-        android:layout_marginBottom="49dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btContact"
+        android:layout_marginTop="341dp"
+        android:layout_marginBottom="9dp"
+        android:text="@string/start"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btPlay"
-        app:srcCompat="@drawable/setting_button"
-        android:contentDescription="@string/todo3" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btOptions"
+        android:layout_width="170dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/options"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btStart"
+        tools:ignore="UnknownId" />
+
+    <Button
+        android:id="@+id/btQuit"
+        android:layout_width="143dp"
+        android:layout_height="78dp"
+        android:layout_marginBottom="140dp"
+        android:text="@string/quit"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        tools:ignore="UnknownId" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

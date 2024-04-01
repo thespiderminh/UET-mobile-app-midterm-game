@@ -51,4 +51,10 @@
     <string name="todo5">TODO</string>
     <string name="todo9">TODO</string>
     <string name="todo10">TODO</string>
+    <string name="quit">Quit</string>
+    <string name="options">Options</string>
+    <string name="start">Start</string>
+    <string name="setting">Setting</string>
+    <string name="view_high_score">View High Score</string>
+    <string name="about">About</string>
 </resources>
