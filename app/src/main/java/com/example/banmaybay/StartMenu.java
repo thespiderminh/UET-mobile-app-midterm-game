@@ -18,7 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class StartMenu extends AppCompatActivity {
 
-    Button btPlay, btOptions, btQuit;
+    Button btPlay, btOptions, btQuit, btHighScore;
     ImageButton btContact;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -29,6 +29,7 @@ public class StartMenu extends AppCompatActivity {
         btOptions = (Button) findViewById(R.id.btOptions);
         btQuit = (Button) findViewById(R.id.btQuit);
         btContact = (ImageButton) findViewById(R.id.btContact);
+        btHighScore = (Button) findViewById(R.id.btHighScore);
         btContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +50,13 @@ public class StartMenu extends AppCompatActivity {
                 showMenu();
             }
         });
+        btHighScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StartMenu.this, ViewHighScore.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void showMenu() {
@@ -62,7 +70,7 @@ public class StartMenu extends AppCompatActivity {
                     Intent intent = new Intent(StartMenu.this, SettingMenu.class);
                     startActivity(intent);
                 } else if(itemId == R.id.highScore) {
-                    Intent intent = new Intent(StartMenu.this, ViewHighScore.class);
+                    Intent intent = new Intent(StartMenu.this, CheckBrightness.class);
                     startActivity(intent);
                 } else if (itemId == R.id.about) {
                     Intent intent = new Intent(StartMenu.this, About.class);
