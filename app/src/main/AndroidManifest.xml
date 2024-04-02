@@ -13,6 +13,12 @@
         android:theme="@style/Theme.BanMayBay"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Setting"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ShowLight"
+            android:exported="false" />
+        <activity
             android:name=".activities.GameOverActivity"
             android:exported="false" />
         <activity
