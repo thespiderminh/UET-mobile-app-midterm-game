@@ -14,6 +14,7 @@ import com.example.banmaybay.MainActivity;
 import com.example.banmaybay.R;
 import com.example.banmaybay.databinding.ActivityGameOverBinding;
 import com.example.banmaybay.musicandsound.SoundEffect;
+import com.example.banmaybay.musicandsound.StartMusic;
 
 public class GameOverActivity extends AppCompatActivity {
     private ActivityGameOverBinding binding;
@@ -47,6 +48,9 @@ public class GameOverActivity extends AppCompatActivity {
 
         binding.quitGame.setOnClickListener(v -> {
             sound.buttonClick();
+            Intent intent = new Intent(GameOverActivity.this, StartMusic.class);
+            stopService(intent);
+            // StartMusic.mediaPlayerStart.pause();
             this.finishAffinity();
             System.exit(0);
         });
