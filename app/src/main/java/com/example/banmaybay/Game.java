@@ -58,7 +58,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     // Variable for recreating sound effects
     private final SoundEffect sound;
     private int score;
-    public Game(Context context) {
+    private String color;
+    public Game(Context context, String color) {
         super(context);
         this.context = context;
 
@@ -71,6 +72,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
 
         background = new BackGround(context);
+        this.color = color;
 
         // Initialize game panels
         performance = new Performance(context, gameLoop);
@@ -78,7 +80,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         joystick = new Joystick(SCREEN_WIDTH / 2, SCREEN_HEIGHT * 9 / 10, 150, 75);
 
         // Create an Aircraft
-        spriteSheet = new SpriteSheet(context);
+        spriteSheet = new SpriteSheet(context, this.color);
         aircraft = new Aircraft(context, joystick, (double) (SCREEN_WIDTH) / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
 
         // Sound
@@ -193,6 +195,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
             Intent intent = new Intent(this.context, GameOverActivity.class);
             intent.putExtra("Score", score);
+            intent.putExtra("Color", color);
             startActivity(context, intent, null);
 
             castNumberOfPause++;

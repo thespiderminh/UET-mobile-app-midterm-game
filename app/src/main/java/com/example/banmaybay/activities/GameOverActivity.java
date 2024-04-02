@@ -29,12 +29,14 @@ public class GameOverActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         int score = i.getIntExtra("Score", -1);
+        String color = i.getStringExtra("Color");
 
         binding.textView2.setText(binding.textView2.getText().toString() + score);
 
         binding.retry.setOnClickListener(v -> {
             sound.buttonClick();
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("Color", color);
             startActivity(intent, null);
             this.finish();
         });

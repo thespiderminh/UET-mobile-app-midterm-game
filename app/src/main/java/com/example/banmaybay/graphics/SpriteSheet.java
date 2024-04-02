@@ -14,10 +14,31 @@ public class SpriteSheet {
     public static int spriteSheetWidth;
     public static int spriteSheetHeight;
 
-    public SpriteSheet(Context context) {
+    public SpriteSheet(Context context, String color) {
         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
         bitmapOptions.inScaled = false;
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet);
+        Log.d("SpriteSheet.java", "constructor\n" + color);
+        switch (color) {
+            case "red":
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_red);
+                break;
+            case "blue":
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_blue);
+                break;
+            case "green":
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_green);
+                break;
+            case "yellow":
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_yellow);
+                break;
+            case "orange":
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_orange);
+                break;
+            case "white":
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_white);
+                break;
+        }
+
         spriteSheetWidth = bitmap.getWidth();
         spriteSheetHeight = bitmap.getHeight();
     }
