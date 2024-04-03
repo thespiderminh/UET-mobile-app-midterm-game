@@ -45,7 +45,7 @@ public class StartMenu extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                StartMusic.mediaPlayerStart.pause();
+                // StartMusic.mediaPlayerStart.pause();
 
                 Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
                 myIntent.putExtra("Color", color);

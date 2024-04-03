@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.banmaybay.MainActivity;
 import com.example.banmaybay.databinding.ActivityPauseBinding;
 import com.example.banmaybay.musicandsound.SoundEffect;
+import com.example.banmaybay.musicandsound.StartMusic;
 
 public class PauseActivity extends AppCompatActivity {
     private ActivityPauseBinding binding;

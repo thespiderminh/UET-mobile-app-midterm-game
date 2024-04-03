@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.banmaybay.databinding.ActivityMainBinding;
+import com.example.banmaybay.musicandsound.StartMusic;
 
 /*
  * MainActivity is the entry point to our application
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         // Background music
         mediaPlayer = MediaPlayer.create(this, R.raw.cyclop);
         mediaPlayer.setLooping(true);
+
+        StartMusic.mediaPlayerStart.pause();
 
         // Set window to fullscreen and hide status bar
         Window window = getWindow();
