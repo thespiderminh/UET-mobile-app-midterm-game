@@ -3,8 +3,12 @@ package com.example.banmaybay.activities;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
@@ -26,11 +30,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-public class GameOverActivity extends AppCompatActivity {
+public class GameOverActivity extends AppCompatActivity implements TextWatcher {
     private ActivityGameOverBinding binding;
     private SoundEffect sound;
     private SQLiteDatabase myDatabase;
+    private Set<String> allNames = new HashSet<>();
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +81,13 @@ public class GameOverActivity extends AppCompatActivity {
             System.exit(0);
         });
 
+        binding.name.addTextChangedListener(this);
+
         binding.saveHighScore.setOnClickListener(v -> {
             String name = binding.name.getText().toString();
+            if (name.isEmpty()) {
+                name = "No name";
+            }
             String date = "";
             String time = "";
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -98,6 +110,41 @@ public class GameOverActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "The save was successful", Toast.LENGTH_SHORT).show();
             }
+
+            sound.buttonClick();
+            Intent intent = new Intent(this, StartMenu.class);
+            intent.putExtra("Color", color);
+            intent.putExtra("GameMode", gameMode);
+            startActivity(intent, null);
+            this.finish();
         });
+
+        allNames.clear();
+        Cursor c = myDatabase.query("highScores", null, null, null, null, null, null);
+        c.moveToNext();
+        while (!c.isAfterLast()) {
+            allNames.add(c.getString(0));
+            c.moveToNext();
+        }
+        c.close();
+        ArrayList<String> x = new ArrayList<>(allNames);
+        binding.name.setAdapter(new ArrayAdapter<>(this,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                x));
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 }

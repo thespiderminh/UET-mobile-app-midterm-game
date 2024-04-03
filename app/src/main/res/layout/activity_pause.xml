@@ -36,6 +36,14 @@
             android:layout_margin="20dp"/>
 
         <Button
+            android:id="@+id/mainMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_menu"
+            android:textSize="30sp"
+            android:layout_margin="20dp"/>
+
+        <Button
             android:id="@+id/quitGame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

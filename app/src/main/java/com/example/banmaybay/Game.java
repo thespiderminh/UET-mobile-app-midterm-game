@@ -205,6 +205,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         if (isPause && castNumberOfPause == 0) {
             sound.buttonClick();
             Intent intent = new Intent(this.context, PauseActivity.class);
+            intent.putExtra("Color", color);
+            intent.putExtra("GameMode", gameMode);
             startActivity(context, intent, null);
             castNumberOfPause++;
             return;

@@ -50,5 +50,9 @@ public class HighScoresActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.highscoreitem, highScores);
         binding.highScores.setAdapter(adapter);
+
+        binding.back.setOnClickListener(v -> {
+            finish();
+        });
     }
 }

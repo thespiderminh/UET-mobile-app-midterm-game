@@ -15,12 +15,17 @@ import com.example.banmaybay.musicandsound.StartMusic;
 public class PauseActivity extends AppCompatActivity {
     private ActivityPauseBinding binding;
     private SoundEffect sound;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityPauseBinding.inflate(getLayoutInflater());
         sound = new SoundEffect(this.getApplicationContext());
         setContentView(binding.getRoot());
+
+        intent = getIntent();
+        String color = intent.getStringExtra("Color");
+        String gameMode = intent.getStringExtra("GameMode");
 
         binding.resumeGame.setOnClickListener(v -> {
             sound.buttonClick();
@@ -31,6 +36,15 @@ public class PauseActivity extends AppCompatActivity {
         binding.restartGame.setOnClickListener(v -> {
             sound.buttonClick();
             Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent, null);
+            this.finish();
+        });
+
+        binding.mainMenu.setOnClickListener(v -> {
+            sound.buttonClick();
+            Intent intent = new Intent(this, StartMenu.class);
+            intent.putExtra("Color", color);
+            intent.putExtra("GameMode", gameMode);
             startActivity(intent, null);
             this.finish();
         });
