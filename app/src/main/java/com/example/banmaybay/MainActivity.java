@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity {
         SCREEN_WIDTH = displayMetrics.widthPixels;
         Intent intent = getIntent();
         String color = intent.getStringExtra("Color");
+        String gameMode = intent.getStringExtra("GameMode");
 
         // Set content view to game, so that objects in the Game class can be rendered to the screen
-        game = new Game(this, color);
+        game = new Game(this, color, gameMode);
         setContentView(game);
     }
 

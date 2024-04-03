@@ -8,4 +8,14 @@
     <string name="game_over">GAME OVER</string>
     <string name="retry">Retry</string>
     <string name="main_menu">Main menu</string>
+    <string name="back">Back</string>
+    <string name="newplayer">NewPlayer</string>
+    <string-array name="colors">
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>White</item>
+    </string-array>
 </resources>

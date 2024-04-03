@@ -19,22 +19,22 @@ public class SpriteSheet {
         bitmapOptions.inScaled = false;
         Log.d("SpriteSheet.java", "constructor\n" + color);
         switch (color) {
-            case "red":
+            case "Red":
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_red);
                 break;
-            case "blue":
+            case "Blue":
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_blue);
                 break;
-            case "green":
+            case "Green":
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_green);
                 break;
-            case "yellow":
+            case "Yellow":
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_yellow);
                 break;
-            case "orange":
+            case "Orange":
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_orange);
                 break;
-            case "white":
+            case "White":
                 bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite_sheet_white);
                 break;
         }

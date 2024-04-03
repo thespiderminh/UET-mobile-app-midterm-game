@@ -3,6 +3,7 @@ package com.example.banmaybay;
 import static androidx.core.content.ContextCompat.startActivity;
 import static com.example.banmaybay.MainActivity.SCREEN_HEIGHT;
 import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
+import static com.example.banmaybay.MainActivity.game;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -59,7 +60,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final SoundEffect sound;
     private int score;
     private String color;
-    public Game(Context context, String color) {
+    public Game(Context context, String color, String gameMode) {
         super(context);
         this.context = context;
 
@@ -73,6 +74,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         background = new BackGround(context);
         this.color = color;
+        this.gameMode = gameMode;
 
         // Initialize game panels
         performance = new Performance(context, gameLoop);
@@ -87,9 +89,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         sound = new SoundEffect(this.getContext());
 
         score = 0;
-
-//        gameMode = "touch";
-        gameMode = "joystick";
     }
 
     // For handling all touch action
@@ -196,6 +195,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             Intent intent = new Intent(this.context, GameOverActivity.class);
             intent.putExtra("Score", score);
             intent.putExtra("Color", color);
+            intent.putExtra("GameMode", gameMode);
             startActivity(context, intent, null);
 
             castNumberOfPause++;
