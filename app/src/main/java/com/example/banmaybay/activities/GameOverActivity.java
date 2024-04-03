@@ -52,7 +52,6 @@ public class GameOverActivity extends AppCompatActivity {
             sound.buttonClick();
             Intent intent = new Intent(GameOverActivity.this, StartMusic.class);
             stopService(intent);
-            // StartMusic.mediaPlayerStart.pause();
             this.finishAffinity();
             System.exit(0);
         });
