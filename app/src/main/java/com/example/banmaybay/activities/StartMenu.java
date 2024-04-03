@@ -2,11 +2,13 @@ package com.example.banmaybay.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupMenu;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.banmaybay.MainActivity;
@@ -24,13 +26,23 @@ public class StartMenu extends AppCompatActivity {
     public boolean startMusicIsPlaying = true;
 
     // ImageButton btPlay;
-    private String color = "white";
+    private String color = "White";
+    private String gameMode = "joystick";
+    private final int REQUEST_CODE = 99;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_menu);
         btPlay = findViewById(R.id.btPlay);
 
+        Intent i = getIntent();
+        String colorIfFromGameOver = i.getStringExtra("Color");
+        String gameModeIfFromGameOver = i.getStringExtra("GameMode");
+        if (colorIfFromGameOver != null) {
+            color = colorIfFromGameOver;
+            gameMode = gameModeIfFromGameOver;
+        }
 
         buttonOptions = findViewById(R.id.buttonOptions);
         buttonQuitGame = findViewById(R.id.buttonQuitGame);
@@ -49,6 +61,7 @@ public class StartMenu extends AppCompatActivity {
 
                 Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
                 myIntent.putExtra("Color", color);
+                myIntent.putExtra("GameMode", gameMode);
                 startActivity(myIntent);
 
             }
@@ -81,7 +94,9 @@ public class StartMenu extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.menuSetting) {
                     Intent intentSetting = new Intent(StartMenu.this, Setting.class);
-                    startActivity(intentSetting);
+                    intentSetting.putExtra("Color", color);
+                    intentSetting.putExtra("GameMode", gameMode);
+                    startActivityForResult(intentSetting, REQUEST_CODE);
                 }
                 if (item.getItemId() == R.id.menuLightTesting) {
                     Intent intentShowLight = new Intent(StartMenu.this, ShowLight.class);
@@ -116,5 +131,14 @@ public class StartMenu extends AppCompatActivity {
         startService(startMusic);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            assert data != null;
+            color = data.getStringExtra("Color");
+            gameMode = data.getStringExtra("GameMode");
+            Log.e("StartMenu.java", color + " " + gameMode);
+        }
+    }
 }
