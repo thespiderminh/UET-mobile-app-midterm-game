@@ -10,4 +10,7 @@
     <item android:title="About"
         android:id="@+id/menuAbout"/>
 
+    <item android:title="Project"
+        android:id="@+id/menuProject"/>
+
 </menu>
