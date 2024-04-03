@@ -1,6 +1,7 @@
 package com.example.banmaybay.activities;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -20,12 +21,9 @@ public class StartMenu extends AppCompatActivity {
 
     Button btPlay;
     Button buttonOptions;
-
+    Button buttonHighScore;
     Button buttonQuitGame;
     SoundEffect sound;
-    public boolean startMusicIsPlaying = true;
-
-    // ImageButton btPlay;
     private String color = "White";
     private String gameMode = "joystick";
     private final int REQUEST_CODE = 99;
@@ -45,6 +43,7 @@ public class StartMenu extends AppCompatActivity {
         }
 
         buttonOptions = findViewById(R.id.buttonOptions);
+        buttonHighScore = findViewById(R.id.buttonViewHighScores);
         buttonQuitGame = findViewById(R.id.buttonQuitGame);
 
         sound = new SoundEffect(this.getApplicationContext());
@@ -71,6 +70,14 @@ public class StartMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ShowMenu();
+            }
+        });
+
+        buttonHighScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(StartMenu.this, HighScoresActivity.class);
+                startActivity(myIntent);
             }
         });
 

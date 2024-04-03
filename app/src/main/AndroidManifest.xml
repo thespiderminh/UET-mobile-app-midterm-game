@@ -15,6 +15,9 @@
         android:theme="@style/Theme.BanMayBay"
         tools:targetApi="31">
         <activity
+            android:name=".activities.HighScoresActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ProjectActivity"
             android:exported="false" />
         <activity
