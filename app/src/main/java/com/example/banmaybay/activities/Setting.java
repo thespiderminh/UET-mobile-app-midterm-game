@@ -2,10 +2,13 @@ package com.example.banmaybay.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
@@ -15,28 +18,34 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.banmaybay.R;
+import com.example.banmaybay.musicandsound.MusicFiles;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Setting extends AppCompatActivity {
     TabHost mytab;
     Button buttonOutSetting;
-    String color;
-    String gameMode;
-    Intent intent;
     private ImageView imageView;
+    private String color;
+    private String gameMode;
+    private String music;
+    private Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +58,7 @@ public class Setting extends AppCompatActivity {
             public void onClick(View v) {
                 intent.putExtra("Color", color);
                 intent.putExtra("GameMode", gameMode);
+                intent.putExtra("Music", music);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -68,8 +78,11 @@ public class Setting extends AppCompatActivity {
         intent = getIntent();
         color = intent.getStringExtra("Color");
         gameMode = intent.getStringExtra("GameMode");
+        music = intent.getStringExtra("Music");
         Spinner spinner = findViewById(R.id.spinner);
         imageView = findViewById(R.id.imageView);
+        RadioGroup radioGroupMusic = findViewById(R.id.radioGroupMusic);
+        ListView listMusic = findViewById(R.id.listMusic);
 
         //xu ly tab 1
         spec1 = mytab.newTabSpec("t1");
@@ -77,7 +90,59 @@ public class Setting extends AppCompatActivity {
         spec1.setIndicator("Sound");
         mytab.addTab(spec1);
 
-        //xu ly tab 2
+        if (Objects.equals(music, "Default")) {
+            radioGroupMusic.check(R.id.defaultMusic);
+            listMusic.setVisibility(View.INVISIBLE);
+        } else if (Objects.equals(music, "Device")) {
+            radioGroupMusic.check(R.id.chooseMusic);
+            listMusic.setVisibility(View.VISIBLE);
+        } else if (Objects.equals(music, "None")) {
+            radioGroupMusic.check(R.id.noMusic);
+            listMusic.setVisibility(View.INVISIBLE);
+        }
+
+        radioGroupMusic.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.defaultMusic) {
+                listMusic.setVisibility(View.INVISIBLE);
+            } else if (checkedId == R.id.chooseMusic) {
+                listMusic.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.noMusic) {
+                listMusic.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        ArrayList<String> titles = new ArrayList<>();
+        ArrayList<String> paths = new ArrayList<>();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA, // path
+        };
+        Cursor cursor = getContentResolver().query(uri,
+                projection, null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String title = cursor.getString(0);
+                String duration = cursor.getString(1);
+                String path = cursor.getString(2);
+
+                titles.add(title);
+                paths.add(path);
+            }
+            cursor.close();
+        }
+        listMusic.setAdapter(new ArrayAdapter<>(this, R.layout.highscoreitem, titles));
+        listMusic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) findViewById(R.id.songName)).setText("           " + titles.get(position));
+            }
+        });
+
+
+            //xu ly tab 2
         spec2 = mytab.newTabSpec("t2");
         spec2.setContent(R.id.tab2);
         spec2.setIndicator("Game Mode");

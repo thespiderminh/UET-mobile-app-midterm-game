@@ -26,6 +26,7 @@ public class StartMenu extends AppCompatActivity {
     SoundEffect sound;
     private String color = "White";
     private String gameMode = "joystick";
+    private String music = "Default";
     private final int REQUEST_CODE = 99;
 
     @Override
@@ -37,9 +38,11 @@ public class StartMenu extends AppCompatActivity {
         Intent i = getIntent();
         String colorIfFromGameOver = i.getStringExtra("Color");
         String gameModeIfFromGameOver = i.getStringExtra("GameMode");
+        String musicIfFromGameOver = i.getStringExtra("Music");
         if (colorIfFromGameOver != null) {
             color = colorIfFromGameOver;
             gameMode = gameModeIfFromGameOver;
+            music = musicIfFromGameOver;
         }
 
         buttonOptions = findViewById(R.id.buttonOptions);
@@ -61,6 +64,7 @@ public class StartMenu extends AppCompatActivity {
                 Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
                 myIntent.putExtra("Color", color);
                 myIntent.putExtra("GameMode", gameMode);
+                myIntent.putExtra("Music", music);
                 startActivity(myIntent);
 
             }
@@ -103,6 +107,7 @@ public class StartMenu extends AppCompatActivity {
                     Intent intentSetting = new Intent(StartMenu.this, Setting.class);
                     intentSetting.putExtra("Color", color);
                     intentSetting.putExtra("GameMode", gameMode);
+                    intentSetting.putExtra("Music", music);
                     startActivityForResult(intentSetting, REQUEST_CODE);
                 }
                 if (item.getItemId() == R.id.menuLightTesting) {
@@ -145,7 +150,14 @@ public class StartMenu extends AppCompatActivity {
             assert data != null;
             color = data.getStringExtra("Color");
             gameMode = data.getStringExtra("GameMode");
-            Log.e("StartMenu.java", color + " " + gameMode);
+            music = data.getStringExtra("Music");
+            /*
+            Music có thể có 3 kiểu:
+                Default thì Lấy nhạc mặc định
+                None thì tắt nhạc
+                Còn lại thì sẽ là path internal uri đến bài nhạc luôn
+                TODO: sửa nhạc theo mấy cái này
+             */
         }
     }
 }

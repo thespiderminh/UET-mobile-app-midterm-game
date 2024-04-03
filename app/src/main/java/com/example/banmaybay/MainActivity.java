@@ -49,9 +49,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String color = intent.getStringExtra("Color");
         String gameMode = intent.getStringExtra("GameMode");
+        String music = intent.getStringExtra("Music");
 
         // Set content view to game, so that objects in the Game class can be rendered to the screen
-        game = new Game(this, color, gameMode);
+        game = new Game(this, color, gameMode, music);
         setContentView(game);
     }
 

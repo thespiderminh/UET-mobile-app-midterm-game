@@ -50,6 +50,7 @@ public class GameOverActivity extends AppCompatActivity implements TextWatcher {
         int score = i.getIntExtra("Score", -1);
         String color = i.getStringExtra("Color");
         String gameMode = i.getStringExtra("GameMode");
+        String music = i.getStringExtra("Music");
 
         myDatabase = openOrCreateDatabase("HighScores.db", MODE_PRIVATE, null);
 
@@ -60,6 +61,7 @@ public class GameOverActivity extends AppCompatActivity implements TextWatcher {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);
+            intent.putExtra("Music", music);
             startActivity(intent, null);
             this.finish();
         });
@@ -69,6 +71,7 @@ public class GameOverActivity extends AppCompatActivity implements TextWatcher {
             Intent intent = new Intent(this, StartMenu.class);
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);
+            intent.putExtra("Music", music);
             startActivity(intent, null);
             this.finish();
         });
@@ -115,6 +118,7 @@ public class GameOverActivity extends AppCompatActivity implements TextWatcher {
             Intent intent = new Intent(this, StartMenu.class);
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);
+            intent.putExtra("Music", music);
             startActivity(intent, null);
             this.finish();
         });

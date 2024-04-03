@@ -60,7 +60,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private final SoundEffect sound;
     private int score;
     private String color;
-    public Game(Context context, String color, String gameMode) {
+    private String music;
+    public Game(Context context, String color, String gameMode, String music) {
         super(context);
         this.context = context;
 
@@ -75,6 +76,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         background = new BackGround(context);
         this.color = color;
         this.gameMode = gameMode;
+        this.music = music;
 
         // Initialize game panels
         performance = new Performance(context, gameLoop);
@@ -196,6 +198,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             intent.putExtra("Score", score);
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);
+            intent.putExtra("Music", music);
             startActivity(context, intent, null);
 
             castNumberOfPause++;
@@ -207,6 +210,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             Intent intent = new Intent(this.context, PauseActivity.class);
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);
+            intent.putExtra("Music", music);
             startActivity(context, intent, null);
             castNumberOfPause++;
             return;
