@@ -93,20 +93,22 @@ public class Setting extends AppCompatActivity {
         if (Objects.equals(music, "Default")) {
             radioGroupMusic.check(R.id.defaultMusic);
             listMusic.setVisibility(View.INVISIBLE);
-        } else if (Objects.equals(music, "Device")) {
-            radioGroupMusic.check(R.id.chooseMusic);
-            listMusic.setVisibility(View.VISIBLE);
         } else if (Objects.equals(music, "None")) {
             radioGroupMusic.check(R.id.noMusic);
             listMusic.setVisibility(View.INVISIBLE);
+        } else {
+            radioGroupMusic.check(R.id.chooseMusic);
+            listMusic.setVisibility(View.VISIBLE);
         }
 
         radioGroupMusic.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.defaultMusic) {
                 listMusic.setVisibility(View.INVISIBLE);
+                music = "Default";
             } else if (checkedId == R.id.chooseMusic) {
                 listMusic.setVisibility(View.VISIBLE);
             } else if (checkedId == R.id.noMusic) {
+                music = "None";
                 listMusic.setVisibility(View.INVISIBLE);
             }
         });
@@ -138,6 +140,7 @@ public class Setting extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) findViewById(R.id.songName)).setText("           " + titles.get(position));
+                music = paths.get(position);
             }
         });
 

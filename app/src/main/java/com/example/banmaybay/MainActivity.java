@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Dimension;
@@ -19,6 +20,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.banmaybay.databinding.ActivityMainBinding;
 import com.example.banmaybay.musicandsound.StartMusic;
 
+import java.io.IOException;
+import java.util.Objects;
+
 /*
  * MainActivity is the entry point to our application
  */
@@ -27,15 +31,12 @@ public class MainActivity extends AppCompatActivity {
     public static int SCREEN_HEIGHT;
     public static Game game;
     public static MediaPlayer mediaPlayer;
+    String music;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MainActivity.java", "onCreate()");
         super.onCreate(savedInstanceState);
-
-        // Background music
-        mediaPlayer = MediaPlayer.create(this, R.raw.cyclop);
-        mediaPlayer.setLooping(true);
 
         StartMusic.mediaPlayerStart.pause();
 
@@ -49,7 +50,24 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String color = intent.getStringExtra("Color");
         String gameMode = intent.getStringExtra("GameMode");
-        String music = intent.getStringExtra("Music");
+        music = intent.getStringExtra("Music");
+
+        // Background music
+        if (Objects.equals(music, "Default")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.cyclop);
+        } else if (Objects.equals(music, "None")) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.nosound);
+        } else {
+            try {
+                mediaPlayer.setDataSource(music);
+                mediaPlayer.prepare();
+            } catch (IOException e) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.nosound);
+                Toast.makeText(this, "Failed to load audio file", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        mediaPlayer.setLooping(true);
 
         // Set content view to game, so that objects in the Game class can be rendered to the screen
         game = new Game(this, color, gameMode, music);
