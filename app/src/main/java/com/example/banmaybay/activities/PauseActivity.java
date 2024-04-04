@@ -37,6 +37,9 @@ public class PauseActivity extends AppCompatActivity {
         binding.restartGame.setOnClickListener(v -> {
             sound.buttonClick();
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("Color", color);
+            intent.putExtra("GameMode", gameMode);
+            intent.putExtra("Music", music);
             startActivity(intent, null);
             this.finish();
         });
