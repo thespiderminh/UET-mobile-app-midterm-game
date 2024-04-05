@@ -5,37 +5,25 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.ArrayMap;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.ColorUtils;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.banmaybay.R;
-import com.example.banmaybay.musicandsound.MusicFiles;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Setting extends AppCompatActivity {
@@ -65,7 +53,7 @@ public class Setting extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("ResourceType")
+    @SuppressLint({"ResourceType", "SetTextI18n"})
     private void addControl() {
         buttonOutSetting = findViewById(R.id.buttonOutSetting);
 
@@ -90,29 +78,7 @@ public class Setting extends AppCompatActivity {
         spec1.setIndicator("Sound");
         mytab.addTab(spec1);
 
-        if (Objects.equals(music, "Default")) {
-            radioGroupMusic.check(R.id.defaultMusic);
-            listMusic.setVisibility(View.INVISIBLE);
-        } else if (Objects.equals(music, "None")) {
-            radioGroupMusic.check(R.id.noMusic);
-            listMusic.setVisibility(View.INVISIBLE);
-        } else {
-            radioGroupMusic.check(R.id.chooseMusic);
-            listMusic.setVisibility(View.VISIBLE);
-        }
-
-        radioGroupMusic.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.defaultMusic) {
-                listMusic.setVisibility(View.INVISIBLE);
-                music = "Default";
-            } else if (checkedId == R.id.chooseMusic) {
-                listMusic.setVisibility(View.VISIBLE);
-            } else if (checkedId == R.id.noMusic) {
-                music = "None";
-                listMusic.setVisibility(View.INVISIBLE);
-            }
-        });
-
+        // Get audios from external storage
         ArrayList<String> titles = new ArrayList<>();
         ArrayList<String> paths = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -135,6 +101,32 @@ public class Setting extends AppCompatActivity {
             cursor.close();
         }
         listMusic.setAdapter(new ArrayAdapter<>(this, R.layout.highscoreitem, titles));
+
+        if (Objects.equals(music, "Default")) {
+            radioGroupMusic.check(R.id.defaultMusic);
+            listMusic.setVisibility(View.INVISIBLE);
+        } else if (Objects.equals(music, "None")) {
+            radioGroupMusic.check(R.id.noMusic);
+            listMusic.setVisibility(View.INVISIBLE);
+        } else {
+            radioGroupMusic.check(R.id.chooseMusic);
+            String title = titles.get(paths.indexOf(music));
+            ((TextView) findViewById(R.id.songName)).setText("           " + title);
+            listMusic.setVisibility(View.VISIBLE);
+        }
+
+        radioGroupMusic.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.defaultMusic) {
+                listMusic.setVisibility(View.INVISIBLE);
+                music = "Default";
+            } else if (checkedId == R.id.chooseMusic) {
+                listMusic.setVisibility(View.VISIBLE);
+            } else if (checkedId == R.id.noMusic) {
+                music = "None";
+                listMusic.setVisibility(View.INVISIBLE);
+            }
+        });
+
         listMusic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @SuppressLint("SetTextI18n")
             @Override

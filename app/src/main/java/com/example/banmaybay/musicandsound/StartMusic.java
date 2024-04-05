@@ -4,13 +4,21 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.banmaybay.R;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
+
 public class StartMusic extends Service {
     public static MediaPlayer mediaPlayerStart;
+    String music = "";
 
     public StartMusic() {
     }
@@ -25,13 +33,27 @@ public class StartMusic extends Service {
     public void onCreate() {
         Log.d("StartMusic.java", "onCreate()");
         super.onCreate();
-        mediaPlayerStart = MediaPlayer.create(StartMusic.this, R.raw.battle_theme);
-        mediaPlayerStart.setLooping(true);
+        mediaPlayerStart = new MediaPlayer();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("StartMusic.java", "onStartCommand()");
+        Log.d("StartMusic.java", "onStartCommand()" + '\n' + intent.getStringExtra("Music"));
+        if (Objects.equals(music, intent.getStringExtra("Music"))) {
+            return super.onStartCommand(intent, flags, startId);
+        }
+
+        music = intent.getStringExtra("Music");
+        mediaPlayerStart.reset();
+        if (Objects.equals(music, "Default")) {
+            mediaPlayerStart = MediaPlayer.create(StartMusic.this, R.raw.battle_theme);
+        } else if (Objects.equals(music, "None")) {
+            mediaPlayerStart = MediaPlayer.create(StartMusic.this, R.raw.nosound);
+        } else if (music != null){
+            mediaPlayerStart = MediaPlayer.create(StartMusic.this, Uri.parse(music));
+        }
+
+        mediaPlayerStart.setLooping(true);
         mediaPlayerStart.start();
         return super.onStartCommand(intent, flags, startId);
     }

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static int SCREEN_HEIGHT;
     public static Game game;
     public static MediaPlayer mediaPlayer;
-    String music;
+    String music = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,20 +50,24 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String color = intent.getStringExtra("Color");
         String gameMode = intent.getStringExtra("GameMode");
-        music = intent.getStringExtra("Music");
 
-        // Background music
-        if (Objects.equals(music, "Default")) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.cyclop);
-        } else if (Objects.equals(music, "None")) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.nosound);
-        } else {
-            try {
-                mediaPlayer.setDataSource(music);
-                mediaPlayer.prepare();
-            } catch (IOException e) {
+        if (music != intent.getStringExtra("Music")) {
+            music = intent.getStringExtra("Music");
+
+            // Background music
+            if (Objects.equals(music, "Default")) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.cyclop);
+            } else if (Objects.equals(music, "None")) {
                 mediaPlayer = MediaPlayer.create(this, R.raw.nosound);
-                Toast.makeText(this, "Failed to load audio file", Toast.LENGTH_SHORT).show();
+            } else if (music != null) {
+                try {
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setDataSource(music);
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.nosound);
+                    Toast.makeText(this, "Failed to load in-game audio file", Toast.LENGTH_SHORT).show();
+                }
             }
         }
 

@@ -1,7 +1,10 @@
 package com.example.banmaybay.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -10,12 +13,17 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.PackageManagerCompat;
 
 import com.example.banmaybay.MainActivity;
 import com.example.banmaybay.R;
 import com.example.banmaybay.musicandsound.SoundEffect;
 import com.example.banmaybay.musicandsound.StartMusic;
+import com.google.android.material.internal.ManufacturerUtils;
 
 public class StartMenu extends AppCompatActivity {
 
@@ -51,49 +59,34 @@ public class StartMenu extends AppCompatActivity {
 
         sound = new SoundEffect(this.getApplicationContext());
 
-        btPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    sound.buttonClick();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                // StartMusic.mediaPlayerStart.pause();
-
-                Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
-                myIntent.putExtra("Color", color);
-                myIntent.putExtra("GameMode", gameMode);
-                myIntent.putExtra("Music", music);
-                startActivity(myIntent);
-
-            }
-        });
-
-        buttonOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ShowMenu();
-            }
-        });
-
-        buttonHighScore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(StartMenu.this, HighScoresActivity.class);
-                startActivity(myIntent);
-            }
-        });
-
-        buttonQuitGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btPlay.setOnClickListener(v -> {
+            try {
                 sound.buttonClick();
-                Intent intent = new Intent(StartMenu.this, StartMusic.class);
-                stopService(intent);
-                finish();
-                System.exit(0);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+            Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
+            myIntent.putExtra("Color", color);
+            myIntent.putExtra("GameMode", gameMode);
+            myIntent.putExtra("Music", music);
+            startActivity(myIntent);
+
+        });
+
+        buttonOptions.setOnClickListener(v -> ShowMenu());
+
+        buttonHighScore.setOnClickListener(v -> {
+            Intent myIntent = new Intent(StartMenu.this, HighScoresActivity.class);
+            startActivity(myIntent);
+        });
+
+        buttonQuitGame.setOnClickListener(v -> {
+            sound.buttonClick();
+            Intent intent = new Intent(StartMenu.this, StartMusic.class);
+            stopService(intent);
+            finish();
+            System.exit(0);
         });
     }
 
@@ -132,14 +125,24 @@ public class StartMenu extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d("StartMenu.java", "onStart()");
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.READ_MEDIA_AUDIO
+            }, REQUEST_CODE);
+        }
+    }
 
-//        mediaPlayer = MediaPlayer.create(this, R.raw.battle_theme);
-//        mediaPlayer.start();
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("StartMenu.java", "onResume()");
         Intent startMusic = new Intent(StartMenu.this, StartMusic.class);
+        startMusic.putExtra("Music", music);
         startService(startMusic);
     }
 
@@ -151,13 +154,6 @@ public class StartMenu extends AppCompatActivity {
             color = data.getStringExtra("Color");
             gameMode = data.getStringExtra("GameMode");
             music = data.getStringExtra("Music");
-            /*
-            Music có thể có 3 kiểu:
-                Default thì Lấy nhạc mặc định
-                None thì tắt nhạc
-                Còn lại thì sẽ là path internal uri đến bài nhạc luôn
-                TODO: sửa nhạc theo mấy cái này
-             */
         }
     }
 }
