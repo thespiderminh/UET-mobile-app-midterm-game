@@ -23,6 +23,7 @@ import com.example.banmaybay.activities.PauseActivity;
 import com.example.banmaybay.gameobject.Aircraft;
 import com.example.banmaybay.gameobject.Bullet;
 import com.example.banmaybay.gameobject.Enemy;
+import com.example.banmaybay.gameobject.EnemyBullet;
 import com.example.banmaybay.gameobject.GameObject;
 import com.example.banmaybay.gamepanel.GamePause;
 import com.example.banmaybay.gamepanel.Joystick;
@@ -46,6 +47,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private Aircraft aircraft;
     private List<Enemy> enemyList = new ArrayList<>();
     private List<Bullet> bulletList = new ArrayList<>();
+    private List<EnemyBullet> enemyBulletList = new ArrayList<>();
     private Joystick joystick;
     private String gameMode; // gameMode = 0:touch, gameMode = 1:joystick
     private SpriteSheet spriteSheet;
@@ -176,6 +178,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for (Bullet bullet : bulletList) {
             bullet.draw(canvas);
         }
+
+        for (EnemyBullet bullet : enemyBulletList) {
+            bullet.draw(canvas);
+        }
         aircraft.draw(canvas);
     }
 
@@ -223,7 +229,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Spawn new enemy if possible
         if (Enemy.readyToSpawn()) {
             int x = (int) (new Random().nextInt((SCREEN_WIDTH * 6) / 10) + (double) (SCREEN_WIDTH * 2) / 10);
-            enemyList.add(new Enemy(x, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0), spriteSheet));
+            enemyList.add(new Enemy(this.context, x, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0), spriteSheet));
             sound.enemySpawn();
         }
 
@@ -239,9 +245,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             int check = GameObject.isColliding(enemyList.get(i), bulletList);
             if (check >= 0) {
                 sound.enemyDestroyed();
-                enemyList.get(i).setDestroyed(true);
+                enemyList.get(i).lossHealth();
                 bulletList.remove(check);
-                score++;
+            }
+
+            // Enemy bắn đạn
+            if (enemyList.get(i).readyToFire()) {
+                enemyBulletList.add(new EnemyBullet(enemyList.get(i).getPositionX(),
+                        enemyList.get(i).getPositionY(),
+                        spriteSheet.getSprite(5, 2)));
             }
 
             // Enemy trúng aircraft
@@ -250,6 +262,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     aircraft.lossHealth();
                 }
                 sound.enemyBreak();
+                enemyList.get(i).setDestroyed(true);
+            }
+
+            if (enemyList.get(i).getHealthPoint() <= 0) {
                 enemyList.get(i).setDestroyed(true);
             }
 
@@ -267,11 +283,27 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
+        for (int i = 0; i < enemyBulletList.size(); i++) {
+            int check = GameObject.isColliding(enemyBulletList.get(i), aircraft);
+            if (check == 1) {
+                enemyBulletList.remove(i);
+                aircraft.lossHealth();
+                i--;
+            }
+        }
+
         // Update bullets
         for (int i = 0; i < bulletList.size(); i++) {
             bulletList.get(i).update();
             if (bulletList.get(i).outOfScreen()) {
                 bulletList.remove(i);
+                i--;
+            }
+        }
+        for (int i = 0; i < enemyBulletList.size(); i++) {
+            enemyBulletList.get(i).update();
+            if (enemyBulletList.get(i).outOfScreen()) {
+                enemyBulletList.remove(i);
                 i--;
             }
         }

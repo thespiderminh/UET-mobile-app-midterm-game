@@ -16,12 +16,13 @@ import com.example.banmaybay.graphics.SpriteSheet;
  * Aircraft is the main character of the game, which you can control
  * by touching the screen or using a joystick
  */
-public class Aircraft extends GameObject {
+public class Aircraft extends Plane {
 
-    public final int MAX_HEALTH_POINT = 4;
     private static final double SPEED_PIXELS_PER_SECOND = 600.0;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
-    public static final int AIRCRAFT_SIZE = 200;
+    protected static final double SHOOT_PER_SECOND = 1.0;
+    protected static final double SECOND_PER_SHOOT = 1.0 / SHOOT_PER_SECOND;
+    protected static long fireTime;
     private double anchorPositionX;
     private double anchorPositionY;
     private double oldPositionX;
@@ -29,19 +30,15 @@ public class Aircraft extends GameObject {
     private double velocityX;
     private double velocityY;
     private Joystick joystick;
-    private Sprite sprite;
-    private static long fireTime;
-    private static final double SHOOT_PER_SECOND = 1.0;
-    private static final double SECOND_PER_SHOOT = 1.0 / SHOOT_PER_SECOND;
-    private HealthBar healthBar;
-    private int healthPoint;
-
     public Aircraft(Context context, Joystick joystick, double positionX, double positionY, Sprite sprite) {
         super(positionX, positionY);
+        MAX_HEALTH_POINT = 3;
+        PLANE_SIZE = 200;
+        
         this.joystick = joystick;
         this.sprite = sprite;
         fireTime = System.currentTimeMillis();
-        this.healthBar = new HealthBar(context);
+        healthBar = new HealthBar(context);
         this.healthPoint = MAX_HEALTH_POINT;
     }
 
@@ -55,7 +52,7 @@ public class Aircraft extends GameObject {
     }
 
     public void draw(Canvas canvas) {
-        sprite.draw(canvas, (int) positionX, (int) positionY, AIRCRAFT_SIZE);
+        sprite.draw(canvas, (int) positionX, (int) positionY, PLANE_SIZE);
         healthBar.draw(canvas, this);
     }
 
@@ -131,8 +128,4 @@ public class Aircraft extends GameObject {
         return healthPoint;
     }
 
-    public void lossHealth() {
-        healthPoint--;
-        healthPoint = Math.max(healthPoint, 0);
-    }
 }

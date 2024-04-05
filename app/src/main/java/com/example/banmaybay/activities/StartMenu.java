@@ -33,7 +33,7 @@ public class StartMenu extends AppCompatActivity {
     Button buttonQuitGame;
     SoundEffect sound;
     private String color = "White";
-    private String gameMode = "joystick";
+    private String gameMode = "touch";
     private String music = "Default";
     private final int REQUEST_CODE = 99;
 

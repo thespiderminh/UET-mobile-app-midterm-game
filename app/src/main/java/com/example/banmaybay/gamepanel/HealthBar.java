@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.banmaybay.R;
 import com.example.banmaybay.gameobject.Aircraft;
+import com.example.banmaybay.gameobject.Enemy;
 
 public class HealthBar {
     private float width, height, margin;
@@ -33,7 +34,30 @@ public class HealthBar {
         float x = (float) aircraft.getPositionX();
         float y = (float) aircraft.getPositionY();
         float distanceToAircraft = 100;
-        float healthPointPercentage = (float) aircraft.getHealthPoint() / aircraft.MAX_HEALTH_POINT;
+        float healthPointPercentage = (float) aircraft.getHealthPoint() / Aircraft.MAX_HEALTH_POINT;
+
+        // Draw border
+        float borderLeft = x - width / 2;
+        float borderRight = x + width / 2;
+        float borderTop = y + distanceToAircraft - height / 2;
+        float borderBottom = y + distanceToAircraft + height / 2;
+        canvas.drawRect(borderLeft, borderTop, borderRight, borderBottom, borderPaint);
+
+        // Draw health
+        float healthWidth = width - 2 * margin;
+        float healthHeight = height - 2 * margin;
+        float healthLeft = borderLeft + margin;
+        float healthRight = healthLeft + healthWidth * healthPointPercentage;
+        float healthTop = borderTop + margin;
+        float healthBottom = borderBottom - margin;
+        canvas.drawRect(healthLeft, healthTop, healthRight, healthBottom, healthPaint);
+    }
+
+    public void draw(Canvas canvas, Enemy enemy) {
+        float x = (float) enemy.getPositionX();
+        float y = (float) enemy.getPositionY();
+        float distanceToAircraft = 100;
+        float healthPointPercentage = (float) enemy.getHealthPoint() / Enemy.MAX_HEALTH_POINT;
 
         // Draw border
         float borderLeft = x - width / 2;
