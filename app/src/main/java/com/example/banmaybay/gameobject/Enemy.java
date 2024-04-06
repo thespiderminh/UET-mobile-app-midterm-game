@@ -5,6 +5,7 @@ import static com.example.banmaybay.MainActivity.SCREEN_WIDTH;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.example.banmaybay.GameLoop;
 import com.example.banmaybay.gamepanel.HealthBar;
@@ -15,10 +16,11 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Enemy extends Plane {
-    public static final int ENEMY_MAX_SPEED = 5;
-    private static final double SPAWN_PER_MINUTE = 10;
-    private static final double SPAWN_PER_SECOND = SPAWN_PER_MINUTE/60.0;
-    private static final double UPDATES_PER_SPAWN = GameLoop.MAX_UPS/SPAWN_PER_SECOND;
+    public static int ENEMY_MAX_SPEED;
+    private static int ENEMY_SPEED_UP;
+    private static final double SPAWN_PER_MINUTE = 20.0;
+    private static final double SPAWN_PER_SECOND = SPAWN_PER_MINUTE / 60.0;
+    private static final double UPDATES_PER_SPAWN = GameLoop.MAX_UPS / SPAWN_PER_SECOND;
     public static double updateUntilNextSpawn = 0;
     private static final double STAGE_PER_SECOND = 60.0;
     private static final double UPDATES_PER_STAGE = GameLoop.MAX_UPS/STAGE_PER_SECOND;
@@ -37,10 +39,23 @@ public class Enemy extends Plane {
     private String enemyMode = "arriving";
     private boolean movingLeft;
     private int changeDirectionTimes = 0;
-
-    public Enemy(Context context, double positionX, double positionY, Sprite sprite, SpriteSheet spriteSheet) {
+    public static int MAX_HEALTH_POINT;
+    protected static int PLANE_SIZE;
+    public Enemy(Context context, double positionX, double positionY, Sprite sprite, SpriteSheet spriteSheet, String difficulty) {
         super(positionX, positionY);
-        MAX_HEALTH_POINT = 3;
+        if (Objects.equals(difficulty, "Easy")) {
+            MAX_HEALTH_POINT = 2;
+            ENEMY_MAX_SPEED = 5;
+        } else if (Objects.equals(difficulty, "Normal")) {
+            MAX_HEALTH_POINT = 3;
+            ENEMY_MAX_SPEED = 5;
+        } else if (Objects.equals(difficulty, "Hard")) {
+            MAX_HEALTH_POINT = 3;
+            ENEMY_MAX_SPEED = 7;
+        } else if (Objects.equals(difficulty, "Insane")) {
+            MAX_HEALTH_POINT = 4;
+            ENEMY_MAX_SPEED = 10;
+        }
         PLANE_SIZE = 150;
 
         this.sprite = sprite;
@@ -68,9 +83,14 @@ public class Enemy extends Plane {
             healthBar.draw(canvas, this);
         }
     }
-    public void update(Aircraft aircraft) {
+    public void update(Aircraft aircraft, int score) {
+        updateSpeed(score);
         updatePosition();
         updateEnemyMode(aircraft);
+    }
+
+    private void updateSpeed(int score) {
+        ENEMY_SPEED_UP = score / 10;
     }
 
     private void updateEnemyMode(Aircraft aircraft) {
@@ -98,6 +118,7 @@ public class Enemy extends Plane {
     }
 
     private void updatePosition() {
+        ENEMY_MAX_SPEED += ENEMY_SPEED_UP;
         if (Objects.equals(enemyMode, "arriving")) {
             positionY += ENEMY_MAX_SPEED;
         } else if (Objects.equals(enemyMode, "moving")) {
@@ -123,6 +144,7 @@ public class Enemy extends Plane {
         } else if (Objects.equals(enemyMode, "attacking")) {
             positionY += 3 * ENEMY_MAX_SPEED;
         }
+        ENEMY_MAX_SPEED -= ENEMY_SPEED_UP;
     }
 
     public void explode() {

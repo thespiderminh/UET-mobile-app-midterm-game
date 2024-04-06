@@ -66,7 +66,7 @@ public class StartMenu extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Intent myIntent = new Intent(StartMenu.this, MainActivity.class);
+            Intent myIntent = new Intent(StartMenu.this, DifficultyChoosingActivity.class);
             myIntent.putExtra("Color", color);
             myIntent.putExtra("GameMode", gameMode);
             myIntent.putExtra("Music", music);

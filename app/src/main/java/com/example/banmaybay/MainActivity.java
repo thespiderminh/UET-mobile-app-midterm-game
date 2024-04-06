@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String color = intent.getStringExtra("Color");
         String gameMode = intent.getStringExtra("GameMode");
+        String difficulty = intent.getStringExtra("Difficulty");
 
         if (music != intent.getStringExtra("Music")) {
             music = intent.getStringExtra("Music");
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setLooping(true);
 
         // Set content view to game, so that objects in the Game class can be rendered to the screen
-        game = new Game(this, color, gameMode, music);
+        game = new Game(this, color, gameMode, music, difficulty);
         setContentView(game);
     }
 

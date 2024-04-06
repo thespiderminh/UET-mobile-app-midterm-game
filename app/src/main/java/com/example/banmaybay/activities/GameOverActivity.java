@@ -58,7 +58,7 @@ public class GameOverActivity extends AppCompatActivity implements TextWatcher {
 
         binding.retry.setOnClickListener(v -> {
             sound.buttonClick();
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, DifficultyChoosingActivity.class);
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);
             intent.putExtra("Music", music);

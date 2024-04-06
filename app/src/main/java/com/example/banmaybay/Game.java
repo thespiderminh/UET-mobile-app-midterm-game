@@ -63,7 +63,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private int score;
     private String color;
     private String music;
-    public Game(Context context, String color, String gameMode, String music) {
+    private String difficulty;
+    private int plusScoreCoefficient = 0;
+    public Game(Context context, String color, String gameMode, String music, String difficulty) {
         super(context);
         this.context = context;
 
@@ -79,6 +81,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         this.color = color;
         this.gameMode = gameMode;
         this.music = music;
+        this.difficulty = difficulty;
+        if (Objects.equals(difficulty, "Easy")) {
+            plusScoreCoefficient = 1;
+        } else if (Objects.equals(difficulty, "Normal")) {
+            plusScoreCoefficient = 2;
+        } else if (Objects.equals(difficulty, "Hard")) {
+            plusScoreCoefficient = 5;
+        } else if (Objects.equals(difficulty, "Insane")) {
+            plusScoreCoefficient = 20;
+        }
 
         // Initialize game panels
         performance = new Performance(context, gameLoop);
@@ -87,7 +99,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Create an Aircraft
         spriteSheet = new SpriteSheet(context, this.color);
-        aircraft = new Aircraft(context, joystick, (double) (SCREEN_WIDTH) / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2));
+        aircraft = new Aircraft(context, joystick, (double) (SCREEN_WIDTH) / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2), difficulty);
 
         // Sound
         sound = new SoundEffect(this.getContext());
@@ -229,7 +241,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Spawn new enemy if possible
         if (Enemy.readyToSpawn()) {
             int x = (int) (new Random().nextInt((SCREEN_WIDTH * 6) / 10) + (double) (SCREEN_WIDTH * 2) / 10);
-            enemyList.add(new Enemy(this.context, x, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0), spriteSheet));
+            enemyList.add(new Enemy(this.context, x, (double) (-SCREEN_HEIGHT * 2) / 10, spriteSheet.getSprite(5, 0), spriteSheet, difficulty));
             sound.enemySpawn();
         }
 
@@ -265,13 +277,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 enemyList.get(i).setDestroyed(true);
             }
 
-            if (enemyList.get(i).getHealthPoint() <= 0) {
+            if (enemyList.get(i).getHealthPoint() <= 0 && !enemyList.get(i).isDestroyed()) {
                 enemyList.get(i).setDestroyed(true);
+                score += plusScoreCoefficient;
             }
 
             // Enemy vẫn sống
             if (!enemyList.get(i).isDestroyed()) {
-                enemyList.get(i).update(aircraft);
+                enemyList.get(i).update(aircraft, score);
             } else { // Enemy chết
                 if (!enemyList.get(i).isFinishExplode()) {
                     enemyList.get(i).explode();

@@ -10,6 +10,7 @@
     <string name="main_menu">Main menu</string>
     <string name="back">Back</string>
     <string name="newplayer">NewPlayer</string>
+    <string name="difficulties">difficulties</string>
     <string-array name="colors">
         <item>Red</item>
         <item>Orange</item>

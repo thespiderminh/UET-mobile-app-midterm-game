@@ -8,8 +8,6 @@ import com.example.banmaybay.graphics.Sprite;
 import com.example.banmaybay.graphics.SpriteSheet;
 
 public abstract class Plane extends GameObject {
-    public static int MAX_HEALTH_POINT;
-    public static int PLANE_SIZE;
     protected HealthBar healthBar;
     protected int healthPoint;
     protected Sprite sprite;
