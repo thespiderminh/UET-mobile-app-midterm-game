@@ -125,43 +125,41 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, SensorE
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (Objects.equals(gameMode, "touch") || Objects.equals(gameMode, "joystick")){
-            if ((event.getX() < SCREEN_WIDTH - gamePause.getSize() || event.getY() > gamePause.getSize())) {
-                if (!isPause) {
-                    if (Objects.equals(gameMode, "touch")) {
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                aircraft.setAnchorPosition((double) event.getX(), (double) event.getY());
-                                return true;
-                            case MotionEvent.ACTION_MOVE:
-                                aircraft.setPositionOnTouch((double) event.getX(), (double) event.getY());
-                                return true;
-                            default:
-                                break;
-                        }
-                    } else if (Objects.equals(gameMode, "joystick")) {
-                        switch (event.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                joystick.setPosition((double) event.getX(), (double) event.getY());
-                                joystick.setIsPressed(true);
-                                return true;
-                            case MotionEvent.ACTION_MOVE:
-                                if (joystick.getIsPressed()) {
-                                    joystick.setActuator((double) event.getX(), (double) event.getY());
-                                }
-                                return true;
-                            case MotionEvent.ACTION_UP:
-                                joystick.setIsPressed(false);
-                                joystick.resetActuator();
-                                return true;
-                            default:
-                                break;
-                        }
+        if ((event.getX() < SCREEN_WIDTH - gamePause.getSize() || event.getY() > gamePause.getSize())) {
+            if (!isPause) {
+                if (Objects.equals(gameMode, "touch")) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            aircraft.setAnchorPosition((double) event.getX(), (double) event.getY());
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            aircraft.setPositionOnTouch((double) event.getX(), (double) event.getY());
+                            return true;
+                        default:
+                            break;
+                    }
+                } else if (Objects.equals(gameMode, "joystick")) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            joystick.setPosition((double) event.getX(), (double) event.getY());
+                            joystick.setIsPressed(true);
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            if (joystick.getIsPressed()) {
+                                joystick.setActuator((double) event.getX(), (double) event.getY());
+                            }
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            joystick.setIsPressed(false);
+                            joystick.resetActuator();
+                            return true;
+                        default:
+                            break;
                     }
                 }
-            } else {
-                isPause = !isPause;
             }
+        } else {
+            isPause = !isPause;
         }
         return super.onTouchEvent(event);
     }
