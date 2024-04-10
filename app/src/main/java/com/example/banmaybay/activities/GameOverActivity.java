@@ -3,42 +3,50 @@ package com.example.banmaybay.activities;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
 
-import com.example.banmaybay.MainActivity;
-import com.example.banmaybay.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+
+
 import com.example.banmaybay.databinding.ActivityGameOverBinding;
 import com.example.banmaybay.musicandsound.SoundEffect;
 import com.example.banmaybay.musicandsound.StartMusic;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.io.FileInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GameOverActivity extends AppCompatActivity implements TextWatcher {
     private ActivityGameOverBinding binding;
     private SoundEffect sound;
     private SQLiteDatabase myDatabase;
     private Set<String> allNames = new HashSet<>();
+    private FusedLocationProviderClient fusedLocationClient;
+    private int requestCode = 123456;
+    private String name;
+    private String date;
+    private String time;
+    double Lat = 0.0;
+    double Long = 0.0;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,31 +97,63 @@ public class GameOverActivity extends AppCompatActivity implements TextWatcher {
         binding.name.addTextChangedListener(this);
 
         binding.saveHighScore.setOnClickListener(v -> {
-            String name = binding.name.getText().toString();
+
+            // name
+            name = binding.name.getText().toString();
             if (name.isEmpty()) {
                 name = "No name";
             }
-            String date = "";
-            String time = "";
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                LocalDate localDate = LocalDate.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                date = localDate.format(formatter);
-            }
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                LocalTime localDate = LocalTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-                time = localDate.format(formatter);
-            }
-            ContentValues content = new ContentValues();
-            content.put("name", name);
-            content.put("score", score);
-            content.put("date", date);
-            content.put("time", time);
-            if (myDatabase.insert("highScores", null, content) == -1) {
-                Toast.makeText(this, "Saving has failed", Toast.LENGTH_SHORT).show();
+
+            //date and time
+            date = "";
+            time = "";
+
+            LocalDate localDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            date = localDate.format(formatter);
+
+            LocalTime localTime = LocalTime.now();
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            time = localTime.format(timeFormatter);
+
+            // Lat and long
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+            ActivityCompat.requestPermissions(this, new String[] {
+                    "android.permission.ACCESS_FINE_LOCATION",
+                    "android.permission.ACCESS_COARSE_LOCATION"
+            }, requestCode);
+
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("GameOverActivity.java", "ACCESS_FINE_LOCATION" + ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION));
+                Log.e("GameOverActivity.java", "ACCESS_COARSE_LOCATION" + ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION));
             } else {
-                Toast.makeText(this, "The save was successful", Toast.LENGTH_SHORT).show();
+                fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        Lat = location.getLatitude();
+                        Long = location.getLongitude();
+                        Log.e("GameOverActivity.java", "Lat.get(): " + Lat);
+                        Log.e("GameOverActivity.java", "Long.get(): " + Long);
+                    } else {
+                        Log.e("GameOverActivity.java", "Location is null");
+                    }
+
+                    ContentValues content = new ContentValues();
+                    content.put("name", name);
+                    content.put("score", score);
+                    content.put("date", date);
+                    content.put("time", time);
+                    content.put("lat", Lat);
+                    content.put("long", Long);
+                    Log.e("GameOverActivity.java", "Lat.get(): " + Lat);
+                    Log.e("GameOverActivity.java", "Long.get(): " + Long);
+                    if (myDatabase.insert("highScores", null, content) == -1) {
+                        Toast.makeText(this, "Saving has failed", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "The save was successful", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             sound.buttonClick();

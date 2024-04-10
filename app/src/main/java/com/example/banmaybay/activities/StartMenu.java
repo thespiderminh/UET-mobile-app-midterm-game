@@ -33,7 +33,7 @@ public class StartMenu extends AppCompatActivity {
     Button buttonQuitGame;
     SoundEffect sound;
     private String color = "White";
-    private String gameMode = "accelerometer";
+    private String gameMode = "joystick";
     private String music = "Default";
     private final int REQUEST_CODE = 99;
     private SQLiteDatabase myDatabase;
@@ -60,7 +60,7 @@ public class StartMenu extends AppCompatActivity {
 
         myDatabase = openOrCreateDatabase("HighScores.db", MODE_PRIVATE, null);
         try {
-            String table = "CREATE TABLE highScores(name TEXT,score INTEGER, date TEXT, time TEXT)";
+            String table = "CREATE TABLE highScores(name TEXT,score INTEGER, date TEXT, time TEXT, lat DOUBLE, long DOUBLE)";
             myDatabase.execSQL(table);
         } catch (Exception e) {
             Log.e("StartMenu.java", "Table existed");

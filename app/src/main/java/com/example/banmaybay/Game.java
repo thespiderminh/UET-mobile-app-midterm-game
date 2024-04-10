@@ -125,9 +125,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, SensorE
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (Objects.equals(gameMode, "accelerometer")) {
-
-        } else if (Objects.equals(gameMode, "touch") || Objects.equals(gameMode, "joystick")){
+        if (Objects.equals(gameMode, "touch") || Objects.equals(gameMode, "joystick")){
             if ((event.getX() < SCREEN_WIDTH - gamePause.getSize() || event.getY() > gamePause.getSize())) {
                 if (!isPause) {
                     if (Objects.equals(gameMode, "touch")) {
@@ -283,17 +281,15 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, SensorE
             }
 
             // Enemy bắn đạn
-            if (enemyList.get(i).readyToFire()) {
+            if (enemyList.get(i).readyToFire() && !enemyList.get(i).isDestroyed()) {
                 enemyBulletList.add(new EnemyBullet(enemyList.get(i).getPositionX(),
                         enemyList.get(i).getPositionY(),
                         spriteSheet.getSprite(5, 2)));
             }
 
             // Enemy trúng aircraft
-            if (GameObject.isColliding(enemyList.get(i), aircraft)) {
-                if (!enemyList.get(i).isDestroyed()) {
-                    aircraft.lossHealth();
-                }
+            if (GameObject.isColliding(enemyList.get(i), aircraft) && !enemyList.get(i).isDestroyed()) {
+                aircraft.lossHealth();
                 sound.enemyBreak();
                 enemyList.get(i).setDestroyed(true);
             }
