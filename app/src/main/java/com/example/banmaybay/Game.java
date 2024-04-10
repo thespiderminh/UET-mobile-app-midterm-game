@@ -10,6 +10,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -42,7 +46,7 @@ import java.util.Random;
  * Game manages all objects in the game and is responsible for updating all states
  * and render all objects to the screen
  */
-public class Game extends SurfaceView implements SurfaceHolder.Callback {
+public class Game extends SurfaceView implements SurfaceHolder.Callback, SensorEventListener {
     private GameLoop gameLoop;
     private Aircraft aircraft;
     private List<Enemy> enemyList = new ArrayList<>();
@@ -56,7 +60,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GamePause gamePause;
     public boolean isPause = false;
     private Context context;
-    private int castNumberOfPause = 0;
+    private int castNumberOfPause = 0, castFlag;
 
     // Variable for recreating sound effects
     private final SoundEffect sound;
@@ -65,7 +69,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private String music;
     private String difficulty;
     private int plusScoreCoefficient = 0;
-    public Game(Context context, String color, String gameMode, String music, String difficulty) {
+    double[] deltaAccelerometer = new double[2];
+    double initialX = (double) (SCREEN_WIDTH) / 2;
+    double initialY = (double) (SCREEN_HEIGHT * 8) / 10;
+    double initialTiltX, initialTiltY;
+    static final float ACCELEROMETER_SENSITIVITY = 1.5f;
+    private SensorManager sensorManager;
+    Sensor accelerometer;
+    public Game(Context context, String color, String gameMode, String music, String difficulty, SensorManager sensorManager, Sensor accelerometer) {
         super(context);
         this.context = context;
 
@@ -78,10 +89,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
 
         background = new BackGround(context);
+        castFlag = 0;
         this.color = color;
         this.gameMode = gameMode;
         this.music = music;
         this.difficulty = difficulty;
+        this.sensorManager = sensorManager;
+        this.accelerometer = accelerometer;
         if (Objects.equals(difficulty, "Easy")) {
             plusScoreCoefficient = 1;
         } else if (Objects.equals(difficulty, "Normal")) {
@@ -99,7 +113,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
         // Create an Aircraft
         spriteSheet = new SpriteSheet(context, this.color);
-        aircraft = new Aircraft(context, joystick, (double) (SCREEN_WIDTH) / 2, (double) (SCREEN_HEIGHT * 8) / 10, spriteSheet.getSprite(2,2), difficulty);
+        aircraft = new Aircraft(context, joystick, initialX, initialY, spriteSheet.getSprite(2,2), difficulty);
 
         // Sound
         sound = new SoundEffect(this.getContext());
@@ -111,41 +125,45 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if ((event.getX() < SCREEN_WIDTH - gamePause.getSize() || event.getY() > gamePause.getSize())) {
-            if (!isPause) {
-                if (Objects.equals(gameMode, "touch")) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            aircraft.setAnchorPosition((double) event.getX(), (double) event.getY());
-                            return true;
-                        case MotionEvent.ACTION_MOVE:
-                            aircraft.setPositionOnTouch((double) event.getX(), (double) event.getY());
-                            return true;
-                        default:
-                            break;
-                    }
-                } else if (Objects.equals(gameMode, "joystick")) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            joystick.setPosition((double) event.getX(), (double) event.getY());
-                            joystick.setIsPressed(true);
-                            return true;
-                        case MotionEvent.ACTION_MOVE:
-                            if (joystick.getIsPressed()) {
-                                joystick.setActuator((double) event.getX(), (double) event.getY());
-                            }
-                            return true;
-                        case MotionEvent.ACTION_UP:
-                            joystick.setIsPressed(false);
-                            joystick.resetActuator();
-                            return true;
-                        default:
-                            break;
+        if (Objects.equals(gameMode, "accelerometer")) {
+
+        } else if (Objects.equals(gameMode, "touch") || Objects.equals(gameMode, "joystick")){
+            if ((event.getX() < SCREEN_WIDTH - gamePause.getSize() || event.getY() > gamePause.getSize())) {
+                if (!isPause) {
+                    if (Objects.equals(gameMode, "touch")) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                aircraft.setAnchorPosition((double) event.getX(), (double) event.getY());
+                                return true;
+                            case MotionEvent.ACTION_MOVE:
+                                aircraft.setPositionOnTouch((double) event.getX(), (double) event.getY());
+                                return true;
+                            default:
+                                break;
+                        }
+                    } else if (Objects.equals(gameMode, "joystick")) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                joystick.setPosition((double) event.getX(), (double) event.getY());
+                                joystick.setIsPressed(true);
+                                return true;
+                            case MotionEvent.ACTION_MOVE:
+                                if (joystick.getIsPressed()) {
+                                    joystick.setActuator((double) event.getX(), (double) event.getY());
+                                }
+                                return true;
+                            case MotionEvent.ACTION_UP:
+                                joystick.setIsPressed(false);
+                                joystick.resetActuator();
+                                return true;
+                            default:
+                                break;
+                        }
                     }
                 }
+            } else {
+                isPause = !isPause;
             }
-        } else {
-            isPause = !isPause;
         }
         return super.onTouchEvent(event);
     }
@@ -153,6 +171,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         Log.d("Game.java", "surfaceCreated()");
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         if (gameLoop.getState().equals(Thread.State.TERMINATED)) {
             gameLoop = new GameLoop(this, holder);
             castNumberOfPause = 0;
@@ -167,6 +186,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
         Log.d("Game.java", "surfaceDestroyed()");
+        sensorManager.unregisterListener(this);
     }
     @Override
     public void draw(Canvas canvas) {
@@ -224,6 +244,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if (isPause && castNumberOfPause == 0) {
+            StartMusic.mediaPlayerStart.start();
             sound.buttonClick();
             Intent intent = new Intent(this.context, PauseActivity.class);
             intent.putExtra("Color", color);
@@ -324,5 +345,32 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void pause() {
         gameLoop.stopLoop();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (Objects.equals(gameMode, "accelerometer")) {
+            if (castFlag == 0) {
+                castFlag++;
+                initialTiltX = event.values[0];     // Lấy giá trị X của Sensor
+                initialTiltY = event.values[1];     // Lấy giá trị Y của Sensor
+            }
+
+            // Tính độ lệch của máy hiện tại so với vị trí cân bằng4
+            deltaAccelerometer[0] = event.values[0] - initialTiltX;
+            deltaAccelerometer[1] = event.values[1] - initialTiltY;
+
+            // Nhân hệ số để chuyển động được xa
+            double deltaX = -deltaAccelerometer[0] * ACCELEROMETER_SENSITIVITY * 50;
+            double deltaY = deltaAccelerometer[1] * ACCELEROMETER_SENSITIVITY * 100;
+
+            // Di chuyển nhân vật theo độ nghiêng hiện tại
+            aircraft.setPositionOnJoystick(initialX + deltaX, initialY + deltaY);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

@@ -55,6 +55,14 @@
                 android:text="Touch"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
+
+            <RadioButton
+                android:id="@+id/accelerometer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Accelerometer"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
         </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

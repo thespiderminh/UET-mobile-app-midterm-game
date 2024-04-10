@@ -33,10 +33,11 @@ public class StartMenu extends AppCompatActivity {
     Button buttonQuitGame;
     SoundEffect sound;
     private String color = "White";
-    private String gameMode = "touch";
+    private String gameMode = "accelerometer";
     private String music = "Default";
     private final int REQUEST_CODE = 99;
-
+    private SQLiteDatabase myDatabase;
+    private Intent startMusic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +57,14 @@ public class StartMenu extends AppCompatActivity {
         buttonOptions = findViewById(R.id.buttonOptions);
         buttonHighScore = findViewById(R.id.buttonViewHighScores);
         buttonQuitGame = findViewById(R.id.buttonQuitGame);
+
+        myDatabase = openOrCreateDatabase("HighScores.db", MODE_PRIVATE, null);
+        try {
+            String table = "CREATE TABLE highScores(name TEXT,score INTEGER, date TEXT, time TEXT)";
+            myDatabase.execSQL(table);
+        } catch (Exception e) {
+            Log.e("StartMenu.java", "Table existed");
+        }
 
         sound = new SoundEffect(this.getApplicationContext());
 
@@ -141,7 +150,7 @@ public class StartMenu extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("StartMenu.java", "onResume()");
-        Intent startMusic = new Intent(StartMenu.this, StartMusic.class);
+        startMusic = new Intent(StartMenu.this, StartMusic.class);
         startMusic.putExtra("Music", music);
         startService(startMusic);
     }

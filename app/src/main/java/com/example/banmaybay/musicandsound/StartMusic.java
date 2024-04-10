@@ -38,9 +38,12 @@ public class StartMusic extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("StartMusic.java", "onStartCommand()" + '\n' + intent.getStringExtra("Music"));
+        Log.d("StartMusic.java", "onStartCommand()");
+        if (intent == null) {
+            return super.onStartCommand(null, flags, startId);
+        }
         if (Objects.equals(music, intent.getStringExtra("Music"))) {
-            return super.onStartCommand(intent, flags, startId);
+            return super.onStartCommand(null, flags, startId);
         }
 
         music = intent.getStringExtra("Music");

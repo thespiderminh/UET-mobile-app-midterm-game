@@ -26,12 +26,6 @@ public class HighScoresActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         myDatabase = openOrCreateDatabase("HighScores.db", MODE_PRIVATE, null);
-        try {
-            String table = "CREATE TABLE highScores(name TEXT,score INTEGER, date TEXT, time TEXT)";
-            myDatabase.execSQL(table);
-        } catch (Exception e) {
-            Log.e("HighScoresActivity.java", "Table existed");
-        }
 
         highScores.clear();
         Cursor c = myDatabase.query("highScores", null, null, null, null, null, "score DESC", "5");

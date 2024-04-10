@@ -1,7 +1,11 @@
 package com.example.banmaybay;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     public static Game game;
     public static MediaPlayer mediaPlayer;
     String music = "";
+    private SensorManager sensorManager;
+    Sensor accelerometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +80,14 @@ public class MainActivity extends AppCompatActivity {
 
         mediaPlayer.setLooping(true);
 
+        // sensor
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager != null) {
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+
         // Set content view to game, so that objects in the Game class can be rendered to the screen
-        game = new Game(this, color, gameMode, music, difficulty);
+        game = new Game(this, color, gameMode, music, difficulty, sensorManager, accelerometer);
         setContentView(game);
     }
 

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Toast;
@@ -68,6 +69,7 @@ public class GameOverActivity extends AppCompatActivity implements TextWatcher {
 
         binding.mainMenu.setOnClickListener(v -> {
             sound.buttonClick();
+            Log.d("GameOverActivity.java", music);
             Intent intent = new Intent(this, StartMenu.class);
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);

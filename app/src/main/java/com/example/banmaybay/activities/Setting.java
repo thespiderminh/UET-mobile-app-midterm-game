@@ -148,6 +148,8 @@ public class Setting extends AppCompatActivity {
             radioGroup.check(R.id.joystick);
         } else if (Objects.equals(gameMode, "touch")) {
             radioGroup.check(R.id.touch);
+        } else if (Objects.equals(gameMode, "accelerometer")) {
+            radioGroup.check(R.id.accelerometer);
         }
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
@@ -155,6 +157,8 @@ public class Setting extends AppCompatActivity {
                 gameMode = "joystick";
             } else if (checkedId == R.id.touch) {
                 gameMode = "touch";
+            } else if (checkedId == R.id.accelerometer) {
+                gameMode = "accelerometer";
             }
         });
 

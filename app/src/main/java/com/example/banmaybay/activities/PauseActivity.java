@@ -4,6 +4,7 @@ package com.example.banmaybay.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,6 +51,7 @@ public class PauseActivity extends AppCompatActivity {
             intent.putExtra("Color", color);
             intent.putExtra("GameMode", gameMode);
             intent.putExtra("Music", music);
+            Log.d("PauseActivity.java", music);
             startActivity(intent, null);
             this.finish();
         });
